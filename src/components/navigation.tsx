@@ -25,7 +25,7 @@ export function Navigation() {
                         <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                             <Calendar className="h-5 w-5 text-white" />
                         </div>
-                        <span className="text-xl font-bold text-gray-900">FestivalHub</span>
+                        <span className="text-xl font-bold text-gray-900">ArmFestHub</span>
                     </Link>
 
                     {/* Desktop Navigation */}

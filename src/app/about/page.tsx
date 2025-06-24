@@ -62,7 +62,7 @@ export default function AboutPage() {
             {/* Hero Section */}
             <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20">
                 <div className="container mx-auto px-4 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-6">About FestivalHub</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6">About ArmFestHub</h1>
                     <p className="text-xl md:text-2xl mb-8 opacity-90 max-w-3xl mx-auto">
                         We're on a mission to connect festival lovers with incredible experiences around the world.
                     </p>
@@ -75,7 +75,7 @@ export default function AboutPage() {
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-3xl md:text-4xl font-bold mb-8">Our Mission</h2>
                         <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                            At FestivalHub, we believe that festivals are more than just events – they're experiences that bring
+                            At ArmFestHub, we believe that festivals are more than just events – they're experiences that bring
                             people together, create lasting memories, and celebrate the diversity of human culture. Our platform makes
                             it easy for festival organizers to reach their audience and for festival-goers to discover their next
                             adventure.
@@ -104,7 +104,7 @@ export default function AboutPage() {
             <section className="py-16 bg-gray-50">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose FestivalHub?</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose ArmFestHub?</h2>
                         <p className="text-gray-600 text-lg">We're committed to making your festival experience amazing</p>
                     </div>
 
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Team</h2>
-                        <p className="text-gray-600 text-lg">The passionate people behind FestivalHub</p>
+                        <p className="text-gray-600 text-lg">The passionate people behind ArmFestHub</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -247,7 +247,7 @@ export default function AboutPage() {
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Discover Your Next Festival?</h2>
                     <p className="text-xl mb-8 opacity-90">
-                        Join thousands of festival-goers who trust FestivalHub for their event experiences
+                        Join thousands of festival-goers who trust ArmFestHub for their event experiences
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/festivals">

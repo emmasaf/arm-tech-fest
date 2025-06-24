@@ -8,7 +8,7 @@ import { Footer } from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "FestivalHub - Discover Amazing Festivals",
+    title: "ArmFestHub - Discover Amazing Festivals",
     description:
         "Find and book tickets for the best festivals around you. From music to food, culture to art - we've got it all!",
 }

@@ -78,7 +78,7 @@ export default function HomePage() {
                   <Button
                       size="lg"
                       variant="outline"
-                      className="border-white text-white hover:bg-white hover:text-purple-600"
+                      className="bg-white text-purple-600 hover:bg-gray-100"
                   >
                     Learn More
                   </Button>

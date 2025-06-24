@@ -12,7 +12,7 @@ export function Footer() {
                             <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                                 <Calendar className="h-5 w-5 text-white" />
                             </div>
-                            <span className="text-xl font-bold">FestivalHub</span>
+                            <span className="text-xl font-bold">ArmFestHub</span>
                         </Link>
                         <p className="text-gray-400 text-sm">
                             Discover amazing festivals and create unforgettable memories with secure, instant ticket booking.
@@ -94,7 +94,7 @@ export function Footer() {
                 </div>
 
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                    <p>&copy; 2024 FestivalHub. All rights reserved.</p>
+                    <p>&copy; 2025 ArmFestHub. All rights reserved.</p>
                 </div>
             </div>
         </footer>
