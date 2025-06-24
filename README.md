@@ -16,6 +16,8 @@ bun dev
 
 ```bash
 bunx prisma migrate dev --name init
+ bunx --bun shadcn@latest add <component-name>
+
 ```
 
 
