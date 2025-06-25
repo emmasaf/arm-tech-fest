@@ -3,7 +3,10 @@ import { NextResponse } from 'next/server'
 import prisma from "@/lib/prisma";
 
 export async function GET() {
-    const users = await prisma.users.findMany();
+
+    const users = await prisma.festival.findMany();
     return NextResponse.json({ message: 'Hello from API!' ,users})
 }
 
+// bunx prisma migrate dev --name init
+//bunx prisma migrate reset

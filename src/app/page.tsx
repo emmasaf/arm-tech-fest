@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, MapPin, Star } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import {useEffect} from "react";
 
 
 // Mock data - replace with actual data fetching
@@ -57,6 +60,22 @@ const testimonials = [
 ]
 
 export default function HomePage() {
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch('/api/test')
+        const data = await res.json()
+        console.log(data,'dataaaa')
+      } catch (err) {
+        console.error('Failed to fetch users:', err)
+      } finally {
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
   return (
       <div className="min-h-screen">
         {/* Hero Section */}
