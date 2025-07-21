@@ -1,14 +1,18 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@/generated/prisma'
 
-const prisma = () => {
-    return new PrismaClient({
-        transactionOptions: {
-            isolationLevel: "ReadCommitted",
-            timeout: 10_000, // 10 sec
-            maxWait: 15_000, // 15 sec
-        },
-    });
-};
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
 
-export default prisma();
+export const prisma = globalForPrisma.prisma ?? new PrismaClient({
+  transactionOptions: {
+    isolationLevel: "ReadCommitted",
+    timeout: 10_000, // 10 sec
+    maxWait: 15_000, // 15 sec
+  },
+})
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
+export default prisma
 

@@ -12,10 +12,10 @@ export function Footer() {
                             <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                                 <Calendar className="h-5 w-5 text-white" />
                             </div>
-                            <span className="text-xl font-bold">ArmFestHub</span>
+                            <span className="text-xl font-bold">ArmEventHub</span>
                         </Link>
                         <p className="text-gray-400 text-sm">
-                            Discover amazing festivals and create unforgettable memories with secure, instant ticket booking.
+                            Discover amazing events and create unforgettable memories with secure, instant ticket booking.
                         </p>
                     </div>
 
@@ -24,8 +24,8 @@ export function Footer() {
                         <h3 className="font-semibold mb-4">Quick Links</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="/festivals" className="text-gray-400 hover:text-white transition-colors">
-                                    Browse Festivals
+                                <Link href="/events" className="text-gray-400 hover:text-white transition-colors">
+                                    Browse Events
                                 </Link>
                             </li>
                             <li>
@@ -94,7 +94,7 @@ export function Footer() {
                 </div>
 
                 <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-                    <p>&copy; 2025 ArmFestHub. All rights reserved.</p>
+                    <p>&copy; 2025 ArmEventHub. All rights reserved.</p>
                 </div>
             </div>
         </footer>

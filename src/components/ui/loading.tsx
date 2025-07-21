@@ -2,7 +2,7 @@ import { Loader2, Calendar, Ticket } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface LoadingProps {
-    variant?: "default" | "minimal" | "festival" | "fullscreen"
+    variant?: "default" | "minimal" | "event" | "fullscreen"
     size?: "sm" | "md" | "lg"
     text?: string
     className?: string
@@ -30,7 +30,7 @@ export function Loading({ variant = "default", size = "md", text, className }: L
         )
     }
 
-    if (variant === "festival") {
+    if (variant === "event") {
         return (
             <div className={cn("flex flex-col items-center justify-center p-8 space-y-4", className)}>
                 <div className="relative">
@@ -40,7 +40,7 @@ export function Loading({ variant = "default", size = "md", text, className }: L
                     <Calendar className="h-12 w-12 text-purple-600" />
                 </div>
                 <div className="text-center space-y-2">
-                    <h3 className="text-lg font-semibold text-gray-900">{text || "Loading Festival Data..."}</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">{text || "Loading Event Data..."}</h3>
                     <p className="text-sm text-gray-500">Please wait while we fetch the latest information</p>
                 </div>
                 <div className="flex space-x-1">

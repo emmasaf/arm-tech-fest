@@ -1,95 +1,395 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, Calendar, Info, Mail, User, Plus } from "lucide-react"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { 
+    Menu, 
+    Calendar, 
+    Info, 
+    Mail, 
+    User, 
+    Plus, 
+    LogIn, 
+    UserPlus, 
+    LogOut, 
+    LayoutDashboard,
+    Home,
+    X,
+    ChevronDown,
+    Ticket,
+    Settings,
+    HelpCircle,
+    Bell
+} from "lucide-react"
+import { useLogout } from "@/hooks/use-auth"
+import { useAuth } from "@/contexts/auth-context"
+import { cn } from "@/lib/utils"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
+    const [isScrolled, setIsScrolled] = useState(false)
+    const { data: session, status } = useSession()
+    const { user, isAuthenticated } = useAuth()
+    const logoutMutation = useLogout()
+    const pathname = usePathname()
+    
+    // Handle scroll effect
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    const handleLogout = () => {
+        logoutMutation.mutate()
+        setIsOpen(false)
+    }
 
     const navItems = [
-        { href: "/", label: "Home", icon: null },
-        { href: "/festivals", label: "Festivals", icon: Calendar },
+        { href: "/", label: "Home", icon: Home },
+        { href: "/events", label: "Events", icon: Calendar },
         { href: "/about", label: "About", icon: Info },
         { href: "/contact", label: "Contact", icon: Mail },
     ]
 
+    const userMenuItems = [
+        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/dashboard/tickets", label: "My Tickets", icon: Ticket },
+        { href: "/dashboard/profile", label: "Profile", icon: User },
+        { href: "/dashboard/settings", label: "Settings", icon: Settings },
+    ]
+
+    // Get user initials for avatar
+    const getUserInitials = (name: string | null | undefined) => {
+        if (!name) return "U"
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    }
+
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <header 
+            className={cn(
+                "sticky top-0 z-50 w-full transition-all duration-300",
+                isScrolled 
+                    ? "border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm" 
+                    : "bg-white"
+            )}
+        >
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                    {/* Logo - Enhanced with animation */}
+                    <Link 
+                        href="/" 
+                        className="flex items-center space-x-2 group"
+                    >
+                        <div className="w-9 h-9 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-110 group-hover:rotate-3">
                             <Calendar className="h-5 w-5 text-white" />
                         </div>
-                        <span className="text-xl font-bold text-gray-900">ArmFestHub</span>
+                        <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                            ArmEventHub
+                        </span>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center space-x-8">
+                    {/* Desktop Navigation - Enhanced with active states */}
+                    <nav className="hidden lg:flex items-center space-x-1">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                                className={cn(
+                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                                    pathname === item.href
+                                        ? "bg-purple-50 text-purple-700"
+                                        : "text-gray-600 hover:text-purple-600 hover:bg-purple-50/50"
+                                )}
                             >
-                                {item.label}
+                                <span className="flex items-center space-x-2">
+                                    <item.icon className="h-4 w-4" />
+                                    <span>{item.label}</span>
+                                </span>
                             </Link>
                         ))}
                     </nav>
 
-                    {/* Desktop Actions */}
-                    <div className="hidden md:flex items-center space-x-4">
-                        <Link href="/register-festival">
-                            <Button variant="outline" size="sm">
+                    {/* Desktop Actions - Enhanced with better UX */}
+                    <div className="hidden lg:flex items-center space-x-3">
+                        {/* Create Event Button - More prominent */}
+                        <Link href="/register-event">
+                            <Button 
+                                variant="outline" 
+                                size="default"
+                                className="border-purple-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200"
+                            >
                                 <Plus className="h-4 w-4 mr-2" />
-                                Register Festival
+                                Create Event
                             </Button>
                         </Link>
-                        <Link href="/admin">
-                            <Button variant="outline" size="sm">
-                                <User className="h-4 w-4 mr-2" />
-                                Admin Login
-                            </Button>
-                        </Link>
+                        
+                        {status === "loading" ? (
+                            <div className="flex items-center space-x-3">
+                                <div className="w-32 h-9 bg-gray-200 animate-pulse rounded-lg"></div>
+                                <div className="w-10 h-10 bg-gray-200 animate-pulse rounded-full"></div>
+                            </div>
+                        ) : session ? (
+                            <div className="flex items-center space-x-3">
+                                {/* Notification Bell */}
+                                <Button variant="ghost" size="icon" className="relative">
+                                    <Bell className="h-5 w-5" />
+                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                                </Button>
+
+                                {/* User Dropdown Menu */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button 
+                                            variant="ghost" 
+                                            className="flex items-center space-x-3 px-3 hover:bg-purple-50"
+                                        >
+                                            <Avatar className="h-8 w-8">
+                                                <AvatarImage src={session.user?.image || undefined} />
+                                                <AvatarFallback className="bg-purple-600 text-white">
+                                                    {getUserInitials(session.user?.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex items-center space-x-2">
+                                                <div className="text-left">
+                                                    <p className="text-sm font-medium">
+                                                        {session.user?.name?.split(' ')[0] || 'User'}
+                                                    </p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {user?.role && (
+                                                            <Badge variant="secondary" className="text-xs py-0 px-1">
+                                                                {user.role}
+                                                            </Badge>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                                            </div>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-56">
+                                        <DropdownMenuLabel>
+                                            <div className="flex flex-col space-y-1">
+                                                <p className="text-sm font-medium">{session.user?.name}</p>
+                                                <p className="text-xs text-gray-500">{session.user?.email}</p>
+                                            </div>
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {userMenuItems.map((item) => (
+                                            <DropdownMenuItem key={item.href} asChild>
+                                                <Link 
+                                                    href={item.href}
+                                                    className="flex items-center space-x-2 cursor-pointer"
+                                                >
+                                                    <item.icon className="h-4 w-4" />
+                                                    <span>{item.label}</span>
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem asChild>
+                                            <Link 
+                                                href="/help"
+                                                className="flex items-center space-x-2 cursor-pointer"
+                                            >
+                                                <HelpCircle className="h-4 w-4" />
+                                                <span>Help & Support</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem 
+                                            onClick={handleLogout}
+                                            disabled={logoutMutation.isPending}
+                                            className="text-red-600 cursor-pointer"
+                                        >
+                                            <LogOut className="h-4 w-4 mr-2" />
+                                            {logoutMutation.isPending ? 'Signing Out...' : 'Sign Out'}
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-3">
+                                <Link href="/login">
+                                    <Button variant="ghost">
+                                        Sign In
+                                    </Button>
+                                </Link>
+                                <Link href="/register">
+                                    <Button className="bg-purple-600 hover:bg-purple-700">
+                                        Get Started
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Mobile Navigation */}
+                    {/* Tablet Actions (md screens) - Show compact version */}
+                    <div className="hidden md:flex lg:hidden items-center space-x-2">
+                        {session ? (
+                            <>
+                                <Link href="/dashboard">
+                                    <Button size="icon" variant="ghost">
+                                        <LayoutDashboard className="h-5 w-5" />
+                                    </Button>
+                                </Link>
+                                <Button size="icon" variant="ghost" onClick={handleLogout}>
+                                    <LogOut className="h-5 w-5" />
+                                </Button>
+                            </>
+                        ) : (
+                            <Link href="/login">
+                                <Button size="sm">Sign In</Button>
+                            </Link>
+                        )}
+                    </div>
+
+                    {/* Mobile Menu Button - Enhanced */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild className="md:hidden">
-                            <Button variant="ghost" size="icon">
+                        <SheetTrigger asChild className="lg:hidden">
+                            <Button 
+                                variant="ghost" 
+                                size="icon"
+                                className="hover:bg-purple-50"
+                            >
                                 <Menu className="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="right" className="w-80">
-                            <div className="flex flex-col space-y-4 mt-8">
-                                {navItems.map((item) => (
-                                    <Link
-                                        key={item.href}
-                                        href={item.href}
+                        <SheetContent side="right" className="w-full sm:w-80 p-0">
+                            <SheetHeader className="border-b px-6 py-4">
+                                <div className="flex items-center justify-between">
+                                    <SheetTitle className="text-lg">Menu</SheetTitle>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
                                         onClick={() => setIsOpen(false)}
-                                        className="flex items-center space-x-3 text-gray-600 hover:text-purple-600 transition-colors font-medium py-2"
+                                        className="h-8 w-8"
                                     >
-                                        {item.icon && <item.icon className="h-5 w-5" />}
-                                        <span>{item.label}</span>
-                                    </Link>
-                                ))}
-                                <div className="pt-4 border-t space-y-2">
-                                    <Link href="/register-festival" onClick={() => setIsOpen(false)}>
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </SheetHeader>
+                            
+                            <div className="flex flex-col h-full">
+                                {/* User Info Section */}
+                                {session && (
+                                    <div className="px-6 py-4 bg-purple-50 border-b">
+                                        <div className="flex items-center space-x-3">
+                                            <Avatar className="h-12 w-12">
+                                                <AvatarImage src={session.user?.image || undefined} />
+                                                <AvatarFallback className="bg-purple-600 text-white">
+                                                    {getUserInitials(session.user?.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <p className="font-medium">{session.user?.name}</p>
+                                                <p className="text-sm text-gray-600">{session.user?.email}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Navigation Items */}
+                                <nav className="flex-1 px-6 py-6">
+                                    <div className="space-y-1">
+                                        {navItems.map((item) => (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={() => setIsOpen(false)}
+                                                className={cn(
+                                                    "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors",
+                                                    pathname === item.href
+                                                        ? "bg-purple-50 text-purple-700"
+                                                        : "text-gray-700 hover:bg-gray-50"
+                                                )}
+                                            >
+                                                <item.icon className="h-5 w-5" />
+                                                <span className="font-medium">{item.label}</span>
+                                            </Link>
+                                        ))}
+                                    </div>
+
+                                    {/* User Menu Items */}
+                                    {session && (
+                                        <>
+                                            <div className="my-6 border-t"></div>
+                                            <div className="space-y-1">
+                                                {userMenuItems.map((item) => (
+                                                    <Link
+                                                        key={item.href}
+                                                        href={item.href}
+                                                        onClick={() => setIsOpen(false)}
+                                                        className={cn(
+                                                            "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors",
+                                                            pathname === item.href
+                                                                ? "bg-purple-50 text-purple-700"
+                                                                : "text-gray-700 hover:bg-gray-50"
+                                                        )}
+                                                    >
+                                                        <item.icon className="h-5 w-5" />
+                                                        <span className="font-medium">{item.label}</span>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+                                </nav>
+
+                                {/* Bottom Actions */}
+                                <div className="border-t px-6 py-4 space-y-3">
+                                    <Link href="/register-event" onClick={() => setIsOpen(false)}>
                                         <Button variant="outline" className="w-full">
                                             <Plus className="h-4 w-4 mr-2" />
-                                            Register Festival
+                                            Create Event
                                         </Button>
                                     </Link>
-                                    <Link href="/admin" onClick={() => setIsOpen(false)}>
-                                        <Button variant="outline" className="w-full">
-                                            <User className="h-4 w-4 mr-2" />
-                                            Admin Login
+                                    
+                                    {status === "loading" ? (
+                                        <div className="space-y-3">
+                                            <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+                                            <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+                                        </div>
+                                    ) : session ? (
+                                        <Button 
+                                            variant="outline" 
+                                            className="w-full text-red-600 border-red-200 hover:bg-red-50"
+                                            onClick={handleLogout}
+                                            disabled={logoutMutation.isPending}
+                                        >
+                                            <LogOut className="h-4 w-4 mr-2" />
+                                            {logoutMutation.isPending ? 'Signing Out...' : 'Sign Out'}
                                         </Button>
-                                    </Link>
+                                    ) : (
+                                        <div className="space-y-3">
+                                            <Link href="/login" onClick={() => setIsOpen(false)}>
+                                                <Button variant="outline" className="w-full">
+                                                    Sign In
+                                                </Button>
+                                            </Link>
+                                            <Link href="/register" onClick={() => setIsOpen(false)}>
+                                                <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                                                    Get Started
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </SheetContent>

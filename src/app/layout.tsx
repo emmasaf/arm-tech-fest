@@ -4,13 +4,16 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { ReactQueryProvider } from "@/lib/react-query"
+import { AuthProvider } from "@/components/providers/auth-provider"
+import { SessionRefresh } from "@/components/session-refresh"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-    title: "ArmFestHub - Discover Amazing Festivals",
+    title: "ArmEventHub - Discover Amazing Events",
     description:
-        "Find and book tickets for the best festivals around you. From music to food, culture to art - we've got it all!",
+        "Find and book tickets for the best events around you. From music to food, culture to art - we've got it all!",
 }
 
 export default function RootLayout({
@@ -21,9 +24,14 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={inter.className}>
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        <ReactQueryProvider>
+          <AuthProvider>
+            <SessionRefresh />
+            <Navigation />
+            <main>{children}</main>
+            <Footer />
+          </AuthProvider>
+        </ReactQueryProvider>
         </body>
         </html>
     )

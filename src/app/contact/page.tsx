@@ -12,11 +12,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react"
+import { useScrollAnimations } from "@/app/hooks/use-scroll-animation"
 
 const contactCategories = [
     { value: "general", label: "General Inquiry" },
     { value: "ticket", label: "Ticket Support" },
-    { value: "festival", label: "Festival Organizer" },
+    { value: "event", label: "Event Organizer" },
     { value: "technical", label: "Technical Issue" },
     { value: "partnership", label: "Partnership" },
     { value: "press", label: "Press & Media" },
@@ -36,13 +37,15 @@ const faqItems = [
         answer: "Contact us with your purchase details and we can resend your ticket to your email.",
     },
     {
-        question: "How do I become a festival organizer?",
+        question: "How do I become a event organizer?",
         answer:
             "Email us at partnerships@festivalhub.com with your event details and we'll get back to you within 24 hours.",
     },
 ]
 
 export default function ContactPage() {
+    useScrollAnimations();
+    
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -93,9 +96,9 @@ export default function ContactPage() {
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
-                    <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                        Have questions about festivals, tickets, or our platform? We're here to help! Reach out to us and we'll get
+                    <h1 className="text-4xl font-bold mb-4 animate-fade-in-up">Get in Touch</h1>
+                    <p className="text-gray-600 text-lg max-w-2xl mx-auto ">
+                        Have questions about events, tickets, or our platform? We're here to help! Reach out to us and we'll get
                         back to you as soon as possible.
                     </p>
                 </div>
@@ -103,14 +106,14 @@ export default function ContactPage() {
                 <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
                     {/* Contact Form */}
                     <div className="lg:col-span-2">
-                        <Card>
+                        <Card className="animate-scale-in ">
                             <CardHeader>
                                 <CardTitle>Send us a Message</CardTitle>
                                 <CardDescription>Fill out the form below and we'll respond within 24 hours</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 {submitStatus === "success" && (
-                                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+                                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3 animate-scale-in">
                                         <CheckCircle className="h-5 w-5 text-green-600" />
                                         <div>
                                             <p className="font-medium text-green-800">Message sent successfully!</p>
@@ -129,7 +132,7 @@ export default function ContactPage() {
                                     </div>
                                 )}
 
-                                <form onSubmit={handleSubmit} className="space-y-6">
+                                <form onSubmit={handleSubmit} className="space-y-6 ">
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <Label htmlFor="name">Full Name *</Label>
@@ -199,7 +202,7 @@ export default function ContactPage() {
 
                                     <Button
                                         type="submit"
-                                        className="w-full bg-purple-600 hover:bg-purple-700"
+                                        className="w-full bg-purple-600 hover:bg-purple-700 hover-glow"
                                         size="lg"
                                         disabled={!isFormValid || isSubmitting}
                                     >
@@ -223,14 +226,14 @@ export default function ContactPage() {
                     {/* Contact Information & FAQ */}
                     <div className="lg:col-span-1 space-y-6">
                         {/* Contact Information */}
-                        <Card>
+                        <Card >
                             <CardHeader>
                                 <CardTitle>Contact Information</CardTitle>
                                 <CardDescription>Multiple ways to reach our team</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <div className="flex items-center gap-3 ">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center hover-glow">
                                         <Mail className="h-5 w-5 text-purple-600" />
                                     </div>
                                     <div>
@@ -239,8 +242,8 @@ export default function ContactPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <div className="flex items-center gap-3 animate-fade-in-left animation-delay-700">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center hover-glow">
                                         <Phone className="h-5 w-5 text-purple-600" />
                                     </div>
                                     <div>
@@ -249,22 +252,22 @@ export default function ContactPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <div className="flex items-center gap-3 animate-fade-in-left animation-delay-800">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center hover-glow">
                                         <MapPin className="h-5 w-5 text-purple-600" />
                                     </div>
                                     <div>
                                         <p className="font-medium">Address</p>
                                         <p className="text-sm text-gray-600">
-                                            123 Festival Street
+                                            123 Event Street
                                             <br />
                                             New York, NY 10001
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <div className="flex items-center gap-3 animate-fade-in-left animation-delay-900">
+                                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center hover-glow">
                                         <Clock className="h-5 w-5 text-purple-600" />
                                     </div>
                                     <div>
@@ -280,7 +283,7 @@ export default function ContactPage() {
                         </Card>
 
                         {/* Quick Help */}
-                        <Card>
+                        <Card className="animate-fade-in-right animation-delay-1000">
                             <CardHeader>
                                 <CardTitle>Quick Help</CardTitle>
                                 <CardDescription>Common inquiries and solutions</CardDescription>
@@ -301,10 +304,10 @@ export default function ContactPage() {
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
                                         <Badge className="bg-purple-600">Partnership</Badge>
-                                        <h4 className="font-medium">Festival Organizers</h4>
+                                        <h4 className="font-medium">Event Organizers</h4>
                                     </div>
                                     <p className="text-sm text-gray-600">
-                                        Want to list your festival? Contact our partnerships team for quick onboarding.
+                                        Want to list your event? Contact our partnerships team for quick onboarding.
                                     </p>
                                 </div>
 
@@ -323,7 +326,7 @@ export default function ContactPage() {
                         </Card>
 
                         {/* FAQ */}
-                        <Card>
+                        <Card className="animate-fade-in-right animation-delay-1100">
                             <CardHeader>
                                 <CardTitle>Frequently Asked Questions</CardTitle>
                             </CardHeader>
@@ -342,7 +345,7 @@ export default function ContactPage() {
 
                 {/* Emergency Contact */}
                 <div className="max-w-4xl mx-auto mt-12">
-                    <Card className="border-orange-200 bg-orange-50">
+                    <Card className="border-orange-200 bg-orange-50 animate-scale-in animation-delay-1200">
                         <CardContent className="pt-6">
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -354,11 +357,11 @@ export default function ContactPage() {
                                         If you're experiencing issues on the day of an event or need immediate assistance:
                                     </p>
                                     <div className="flex flex-col sm:flex-row gap-3">
-                                        <Button variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100">
+                                        <Button variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100 hover-lift">
                                             <Phone className="h-4 w-4 mr-2" />
                                             Call: +1 (555) 911-FEST
                                         </Button>
-                                        <Button variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100">
+                                        <Button variant="outline" className="border-orange-300 text-orange-700 hover:bg-orange-100 hover-lift">
                                             <Mail className="h-4 w-4 mr-2" />
                                             urgent@festivalhub.com
                                         </Button>

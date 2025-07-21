@@ -1,28 +1,28 @@
-# 🎪 FestivalHub - Festival Discovery & Ticketing Platform
+# 🎪 FestivalHub - Event Discovery & Ticketing Platform
 
-A modern, full-stack web application for discovering festivals and purchasing tickets. Built with Next.js 14, TypeScript, Prisma, PostgreSQL, and shadcn/ui.
+A modern, full-stack web application for discovering events and purchasing tickets. Built with Next.js 14, TypeScript, Prisma, PostgreSQL, and shadcn/ui.
 
-![FestivalHub Banner](https://via.placeholder.com/1200x400/8b5cf6/ffffff?text=FestivalHub+-+Discover+Amazing+Festivals)
+![FestivalHub Banner](https://via.placeholder.com/1200x400/8b5cf6/ffffff?text=FestivalHub+-+Discover+Amazing+Events)
 
 ## ✨ Features
 
-### 🎫 For Festival-Goers
-- **Discover Festivals** - Browse and search festivals by category, location, and date
+### 🎫 For Event-Goers
+- **Discover Events** - Browse and search events by category, location, and date
 - **Secure Ticketing** - Purchase tickets with instant QR code generation
 - **Advanced Filtering** - Filter by price, category, location, and date range
 - **Mobile-First Design** - Responsive design optimized for all devices
 - **Ticket Management** - Download tickets as PDF or receive via email
 
-### 🎪 For Festival Organizers
-- **Festival Registration** - Multi-step registration form for festival submissions
-- **Event Management** - Manage festival details, pricing, and availability
+### 🎪 For Event Organizers
+- **Event Registration** - Multi-step registration form for event submissions
+- **Event Management** - Manage event details, pricing, and availability
 - **Analytics Dashboard** - Track ticket sales and attendee data
 - **Email Notifications** - Automated notifications for bookings and updates
 
 ### 👨‍💼 For Administrators
 - **Admin Dashboard** - Comprehensive admin panel for platform management
-- **Festival Approval** - Review and approve festival registration requests
-- **User Management** - Manage users and festival organizers
+- **Event Approval** - Review and approve event registration requests
+- **User Management** - Manage users and event organizers
 - **Analytics & Reporting** - Platform-wide analytics and reporting tools
 
 ## 🛠️ Tech Stack
@@ -57,7 +57,7 @@ A modern, full-stack web application for discovering festivals and purchasing ti
 
 1. **Clone the repository**
    \`\`\`bash
-   git clone https://github.com/yourusername/festivalhub.git
+   git clone https://github.com/emmasaf/arm-tech-fest.git
    cd festivalhub
    \`\`\`
 
@@ -118,6 +118,55 @@ A modern, full-stack web application for discovering festivals and purchasing ti
 6. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+## 🎭 Demo Credentials
+
+For testing and demonstration purposes, you can use the pre-configured admin account:
+
+### 🔑 Admin Account (Super Admin)
+- **Email**: `safaryanemma05@gmail.com`  
+- **Password**: `varujpidoras06`
+- **Role**: SUPER_ADMIN (Full platform access)
+
+### 🚀 How to Use Demo Credentials
+
+1. **Navigate to Login**: Go to `/login` or click "Sign In" in the navigation
+2. **Enter Credentials**: Use the admin email and password above
+3. **Access Dashboard**: After login, you'll be redirected to `/dashboard`
+4. **Explore Features**: 
+   - View role-specific dashboard with stats and alerts
+   - Access admin panels (user management, analytics, etc.)
+   - Create and manage events
+   - Test different user roles and permissions
+
+### 📋 Available Features by Role
+
+**SUPER_ADMIN Features:**
+- ✅ Full platform overview with system-wide statistics
+- ✅ User management and role assignments  
+- ✅ Event approval and content moderation
+- ✅ Platform analytics and reporting
+- ✅ System configuration and settings
+
+**Dashboard Sections:**
+- **Overview**: Platform statistics (users, events, tickets, revenue)
+- **Quick Actions**: Direct access to management tools
+- **Alerts**: System notifications and pending tasks
+- **Role-based Navigation**: Sidebar with appropriate permissions
+
+### 🔄 Creating Additional Demo Users
+
+You can create additional demo users by:
+1. Registering new accounts through `/register`
+2. Manually setting roles in the database
+3. Using the seeding script: `bun db:seed`
+
+### 💡 Demo Tips
+
+- **Test Authentication**: Try logging out and back in to see navigation changes
+- **Explore Roles**: Each role has different dashboard content and permissions
+- **Mobile Testing**: Test responsive dashboard on mobile devices
+- **Session Management**: Sessions persist across browser refreshes
+
 ## 📁 Project Structure
 
 \`\`\`
@@ -126,8 +175,8 @@ festivalhub/
 │   ├── (auth)/                   # Authentication routes
 │   ├── admin/                    # Admin dashboard
 │   ├── api/                      # API routes
-│   ├── festivals/                # Festival pages
-│   ├── register-festival/        # Festival registration
+│   ├── events/                # Event pages
+│   ├── register-event/        # Event registration
 │   ├── buy-ticket/              # Ticket purchase flow
 │   ├── ticket/                  # Ticket display
 │   ├── globals.css              # Global styles
@@ -168,16 +217,16 @@ festivalhub/
 ### Core Tables
 
 - **User** - User accounts and authentication
-- **Festival** - Festival information and details
+- **Event** - Event information and details
 - **Ticket** - Ticket purchases and QR codes
-- **FestivalRequest** - Festival registration requests
-- **Category** - Festival categories
+- **EventRequest** - Event registration requests
+- **Category** - Event categories
 - **Location** - Venue and location data
 
 ### Key Relationships
 
 \`\`\`prisma
-model Festival {
+model Event {
 id          String   @id @default(cuid())
 name        String
 description String
@@ -195,8 +244,8 @@ updatedAt   DateTime @updatedAt
 model Ticket {
 id         String   @id @default(cuid())
 qrCode     String   @unique
-festival   Festival @relation(fields: [festivalId], references: [id])
-festivalId String
+event   Event @relation(fields: [eventId], references: [id])
+eventId String
 buyerEmail String
 buyerName  String
 createdAt  DateTime @default(now())
@@ -235,7 +284,7 @@ bunx shadcn@latest add input
 ### Custom Components
 - **Loading States** - Universal loading components
 - **Error Handling** - Comprehensive error boundaries
-- **Festival Cards** - Reusable festival display components
+- **Event Cards** - Reusable event display components
 - **Form Components** - Multi-step form components
 
 ## 🔐 Authentication
@@ -249,28 +298,28 @@ Authentication is handled by NextAuth.js with support for:
 ## 📱 API Endpoints
 
 ### Public Endpoints
-- \`GET /api/festivals\` - List all festivals
-- \`GET /api/festivals/[id]\` - Get festival details
+- \`GET /api/events\` - List all events
+- \`GET /api/events/[id]\` - Get event details
 - \`POST /api/tickets\` - Purchase ticket
 
 ### Protected Endpoints
-- \`POST /api/festivals\` - Create festival (Admin only)
-- \`GET /api/admin/requests\` - Get festival requests (Admin only)
+- \`POST /api/events\` - Create event (Admin only)
+- \`GET /api/admin/requests\` - Get event requests (Admin only)
 - \`PUT /api/admin/requests/[id]\` - Approve/reject requests (Admin only)
 
 ### Example API Usage
 
 \`\`\`javascript
-// Fetch festivals
-const response = await fetch('/api/festivals?category=music&limit=10')
-const festivals = await response.json()
+// Fetch events
+const response = await fetch('/api/events?category=music&limit=10')
+const events = await response.json()
 
 // Purchase ticket
 const ticket = await fetch('/api/tickets', {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({
-festivalId: 'festival-id',
+eventId: 'event-id',
 buyerName: 'John Doe',
 buyerEmail: 'john@example.com'
 })

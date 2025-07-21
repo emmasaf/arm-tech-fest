@@ -4,230 +4,323 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, MapPin, Star } from "lucide-react"
+import { Calendar, MapPin, Star, Search, ArrowRight, Loader2, AlertCircle, DollarSign, Users } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import {useEffect} from "react";
+import { useState } from "react"
+import { useFeaturedEvents } from "@/hooks/use-events"
 
-
-// Mock data - replace with actual data fetching
-const featuredFestivals = [
-  {
-    id: 1,
-    title: "Summer Music Fest 2024",
-    date: "2024-07-15",
-    location: "Central Park, NYC",
-    price: 89,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Music",
-  },
-  {
-    id: 2,
-    title: "Food & Wine Festival",
-    date: "2024-08-20",
-    location: "Napa Valley, CA",
-    price: 125,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Food",
-  },
-  {
-    id: 3,
-    title: "Cultural Heritage Day",
-    date: "2024-09-10",
-    location: "Downtown Plaza",
-    price: 45,
-    image: "/placeholder.svg?height=200&width=300",
-    category: "Culture",
-  },
-]
-
+// Static testimonials (could be moved to database if needed)
 const testimonials = [
   {
+    id: 1,
     name: "Sarah Johnson",
     text: "Amazing experience! The QR code tickets made entry so smooth.",
     rating: 5,
+    location: "Los Angeles, CA"
   },
   {
-    name: "Mike Chen",
-    text: "Found the perfect festival for my family. Great platform!",
+    id: 2,
+    name: "Michael Chen",
+    text: "Great variety of events and easy booking process.",
     rating: 5,
+    location: "San Francisco, CA"
   },
   {
-    name: "Emma Davis",
-    text: "Easy booking process and excellent customer service.",
-    rating: 4,
+    id: 3,
+    name: "Emma Rodriguez",
+    text: "Love how organized everything is. Found my perfect event!",
+    rating: 5,
+    location: "Austin, TX"
   },
 ]
 
 export default function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("")
+  
+  // Fetch featured events from database
+  const { 
+    data: featuredData, 
+    isLoading: featuredLoading, 
+    error: featuredError 
+  } = useFeaturedEvents(6)
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch('/api/test')
-        const data = await res.json()
-        console.log(data,'dataaaa')
-      } catch (err) {
-        console.error('Failed to fetch users:', err)
-      } finally {
-      }
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      window.location.href = `/events?search=${encodeURIComponent(searchQuery)}`
     }
+  }
 
-    fetchUsers()
-  }, [])
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    })
+  }
+
+  const formatPrice = (price: number, isFree: boolean) => {
+    if (isFree) return "Free"
+    return `$${price.toFixed(2)}`
+  }
 
   return (
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-purple-600 to-pink-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">Discover Amazing Festivals</h1>
-              <p className="text-xl md:text-2xl mb-8 opacity-90">
-                Find and book tickets for the best festivals around you. From music to food, culture to art - we've got it
-                all!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/festivals">
-                  <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-                    Browse Festivals
-                  </Button>
-                </Link>
-                <Link href="/about">
-                  <Button
-                      size="lg"
-                      variant="outline"
-                      className="bg-white text-purple-600 hover:bg-gray-100"
-                  >
-                    Learn More
-                  </Button>
-                </Link>
-              </div>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 text-white py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in-up">
+            Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-violet-400">Amazing</span> Events
+          </h1>
+          <p className="text-xl lg:text-2xl mb-8 max-w-3xl mx-auto text-blue-100 animate-fade-in-up scroll-delay-200">
+            From music and food to culture and art, find the perfect event experience for you
+          </p>
+          
+          {/* Search Form */}
+          <form onSubmit={handleSearch} className="max-w-md mx-auto mb-8 animate-fade-in-up scroll-delay-400">
+            <div className="flex">
+              <Input
+                type="text"
+                placeholder="Search events..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 text-gray-900"
+              />
+              <Button type="submit" className="ml-2 hover-glow">
+                <Search className="h-4 w-4" />
+              </Button>
             </div>
+          </form>
+          
+          <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up scroll-delay-600">
+            <Link href="/events">
+              <Button size="lg" className="hover-glow">
+                Browse All Events
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/register-event">
+              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                List Your Event
+              </Button>
+            </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Featured Festivals */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Festivals</h2>
-              <p className="text-gray-600 text-lg">Don't miss these upcoming amazing events</p>
+      {/* Featured Events Section */}
+      <section className="py-16 lg:py-24 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Featured Events
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Don't miss out on these amazing upcoming events
+            </p>
+          </div>
+
+          {/* Loading State */}
+          {featuredLoading && (
+            <div className="text-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-purple-600 mx-auto mb-4" />
+              <p className="text-gray-600">Loading featured events...</p>
             </div>
+          )}
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredFestivals.map((festival) => (
-                  <Card key={festival.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                    <div className="relative h-48">
-                      <Image
-                          src={festival.image || "/placeholder.svg"}
-                          alt={festival.title}
-                          fill
-                          className="object-cover"
-                      />
-                      <Badge className="absolute top-4 left-4 bg-purple-600">{festival.category}</Badge>
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="text-xl">{festival.title}</CardTitle>
-                      <CardDescription className="flex items-center gap-4 text-sm">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {new Date(festival.date).toLocaleDateString()}
-                    </span>
-                        <span className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                          {festival.location}
-                    </span>
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-purple-600">${festival.price}</span>
-                        <Link href={`/festivals/${festival.id}`}>
-                          <Button>View Details</Button>
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link href="/festivals">
-                <Button size="lg" variant="outline">
-                  View All Festivals
+          {/* Error State */}
+          {featuredError && (
+            <div className="text-center py-12">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Unable to Load Events</h3>
+              <p className="text-gray-600 mb-4">We're having trouble loading the featured events.</p>
+              <Link href="/events">
+                <Button variant="outline">
+                  View All Events
                 </Button>
               </Link>
             </div>
-          </div>
-        </section>
+          )}
 
-        {/* Stats Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div>
-                <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
-                <div className="text-gray-600">Festivals Listed</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-purple-600 mb-2">10K+</div>
-                <div className="text-gray-600">Tickets Sold</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-purple-600 mb-2">4.8★</div>
-                <div className="text-gray-600">Average Rating</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Users Say</h2>
-              <p className="text-gray-600 text-lg">Join thousands of happy festival-goers</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                  <Card key={index}>
-                    <CardContent className="pt-6">
-                      <div className="flex mb-4">
-                        {[...Array(5)].map((_, i) => (
-                            <Star
-                                key={i}
-                                className={`h-5 w-5 ${
-                                    i < testimonial.rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                                }`}
-                            />
-                        ))}
+          {/* Featured Events Grid */}
+          {!featuredLoading && !featuredError && featuredData && (
+            <>
+              {featuredData.events.length === 0 ? (
+                <div className="text-center py-12">
+                  <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No Featured Events</h3>
+                  <p className="text-gray-600 mb-4">Check back soon for exciting upcoming events!</p>
+                  <Link href="/events">
+                    <Button variant="outline">
+                      Browse All Events
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                  {featuredData.events.map((event, index) => (
+                    <Card key={event.id} className="overflow-hidden hover-lift transition-all duration-300 hover:shadow-lg animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
+                      <div className="relative h-48 overflow-hidden">
+                        <Image
+                          src={event.images[0] || "/placeholder.svg?height=200&width=300"}
+                          alt={event.name}
+                          fill
+                          className="object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                        <div className="absolute top-4 right-4">
+                          <Badge 
+                            variant="secondary" 
+                            className="text-white font-semibold"
+                            style={{ backgroundColor: event.category.color }}
+                          >
+                            {event.category.icon} {event.category.name}
+                          </Badge>
+                        </div>
                       </div>
-                      <p className="text-gray-600 mb-4">"{testimonial.text}"</p>
-                      <p className="font-semibold">- {testimonial.name}</p>
-                    </CardContent>
-                  </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+                      <CardHeader>
+                        <CardTitle className="line-clamp-2">{event.name}</CardTitle>
+                        <CardDescription className="line-clamp-3">
+                          {event.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
+                            <span>{formatDate(event.startDate)}</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                            <span className="line-clamp-1">
+                              {event.venueName}, {event.city}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center text-sm">
+                              <DollarSign className="h-4 w-4 mr-1 text-green-600" />
+                              <span className="font-semibold text-green-600">
+                                {formatPrice(event.price, event.isFree)}
+                              </span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Users className="h-4 w-4 mr-1" />
+                              <span>{event.availableTickets} left</span>
+                            </div>
+                          </div>
+                          <div className="pt-3">
+                            <Link href={`/events/${event.id}`}>
+                              <Button className="w-full hover-glow">
+                                View Details
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
 
-        {/* Newsletter Signup */}
-        <section className="py-16 bg-purple-600 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay Updated</h2>
-            <p className="text-xl mb-8 opacity-90">Get notified about new festivals and exclusive offers</p>
-            <div className="max-w-md mx-auto">
-              <form className="flex gap-4">
-                <Input type="email" placeholder="Enter your email" className="flex-1 bg-white text-gray-900" />
-                <Button type="submit" className="bg-pink-600 hover:bg-pink-700">
-                  Subscribe
-                </Button>
-              </form>
+              {/* View More Button */}
+              {featuredData.events.length > 0 && (
+                <div className="text-center">
+                  <Link href="/events">
+                    <Button variant="outline" size="lg">
+                      View All Events
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="animate-fade-in-up">
+              <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">5+</div>
+              <div className="text-gray-600">Active Events</div>
+            </div>
+            <div className="animate-fade-in-up scroll-delay-100">
+              <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">156+</div>
+              <div className="text-gray-600">Tickets Sold</div>
+            </div>
+            <div className="animate-fade-in-up scroll-delay-200">
+              <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">8+</div>
+              <div className="text-gray-600">Happy Users</div>
+            </div>
+            <div className="animate-fade-in-up scroll-delay-300">
+              <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">6</div>
+              <div className="text-gray-600">Categories</div>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 lg:py-24 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              What People Are Saying
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Don't just take our word for it - hear from event-goers themselves
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={testimonial.id} className="animate-fade-in-up hover-lift" style={{ animationDelay: `${index * 100}ms` }}>
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-600 mb-4 italic">"{testimonial.text}"</p>
+                  <div>
+                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-500">{testimonial.location}</div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 lg:py-24 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 animate-fade-in-up">
+            Ready to Start Your Event Journey?
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto animate-fade-in-up scroll-delay-200">
+            Browse our curated selection of events and find your next unforgettable experience
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up scroll-delay-400">
+            <Link href="/events">
+              <Button size="lg" variant="secondary" className="hover-glow">
+                Explore Events
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/register-event">
+              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                List Your Event
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }

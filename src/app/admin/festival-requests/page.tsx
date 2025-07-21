@@ -18,11 +18,11 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calendar, MapPin, Users, DollarSign, Search, Eye, Check, X, Clock } from "lucide-react"
 
-// Mock data for festival requests
+// Mock data for event requests
 const festivalRequests = [
     {
         id: 1,
-        festivalName: "Summer Music Fest 2024",
+        eventName: "Summer Music Fest 2024",
         organizerName: "John Smith",
         organizerEmail: "john@musicfest.com",
         organizationName: "Music Events LLC",
@@ -34,11 +34,11 @@ const festivalRequests = [
         ticketPrice: "89.00",
         status: "pending",
         submittedAt: "2024-01-15T10:30:00Z",
-        description: "A three-day music festival featuring indie and alternative artists from around the world.",
+        description: "A three-day music event featuring indie and alternative artists from around the world.",
     },
     {
         id: 2,
-        festivalName: "Food & Wine Festival",
+        eventName: "Food & Wine Event",
         organizerName: "Sarah Johnson",
         organizerEmail: "sarah@foodwine.com",
         organizationName: "Culinary Events Co",
@@ -54,7 +54,7 @@ const festivalRequests = [
     },
     {
         id: 3,
-        festivalName: "Tech Innovation Summit",
+        eventName: "Tech Innovation Summit",
         organizerName: "Mike Chen",
         organizerEmail: "mike@techsummit.com",
         organizationName: "Tech Forward Inc",
@@ -86,7 +86,7 @@ export default function FestivalRequestsPage() {
 
     const filteredRequests = festivalRequests.filter((request) => {
         const matchesSearch =
-            request.festivalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            request.eventName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             request.organizerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             request.organizationName.toLowerCase().includes(searchTerm.toLowerCase())
         const matchesStatus = statusFilter === "all" || request.status === statusFilter
@@ -95,7 +95,7 @@ export default function FestivalRequestsPage() {
 
     const handleReview = (action: "approve" | "reject") => {
         // In a real app, this would make an API call
-        console.log(`${action} festival request:`, selectedRequest?.id, reviewNotes)
+        console.log(`${action} event request:`, selectedRequest?.id, reviewNotes)
         setSelectedRequest(null)
         setReviewAction(null)
         setReviewNotes("")
@@ -118,8 +118,8 @@ export default function FestivalRequestsPage() {
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold mb-2">Festival Registration Requests</h1>
-                    <p className="text-gray-600">Review and manage festival registration applications</p>
+                    <h1 className="text-3xl font-bold mb-2">Event Registration Requests</h1>
+                    <p className="text-gray-600">Review and manage event registration applications</p>
                 </div>
 
                 {/* Stats Cards */}
@@ -195,7 +195,7 @@ export default function FestivalRequestsPage() {
                                 <div className="relative">
                                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                     <Input
-                                        placeholder="Search by festival name, organizer, or organization..."
+                                        placeholder="Search by event name, organizer, or organization..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                         className="pl-10"
@@ -224,7 +224,7 @@ export default function FestivalRequestsPage() {
                             <CardContent className="pt-6">
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <h3 className="text-xl font-semibold mb-2">{request.festivalName}</h3>
+                                        <h3 className="text-xl font-semibold mb-2">{request.eventName}</h3>
                                         <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
@@ -278,8 +278,8 @@ export default function FestivalRequestsPage() {
                                         </DialogTrigger>
                                         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                                             <DialogHeader>
-                                                <DialogTitle>{request.festivalName}</DialogTitle>
-                                                <DialogDescription>Festival Registration Request Details</DialogDescription>
+                                                <DialogTitle>{request.eventName}</DialogTitle>
+                                                <DialogDescription>Event Registration Request Details</DialogDescription>
                                             </DialogHeader>
                                             {selectedRequest && (
                                                 <div className="space-y-6">
@@ -405,7 +405,7 @@ export default function FestivalRequestsPage() {
                 {filteredRequests.length === 0 && (
                     <Card>
                         <CardContent className="pt-8 text-center">
-                            <p className="text-gray-500">No festival requests found matching your criteria.</p>
+                            <p className="text-gray-500">No event requests found matching your criteria.</p>
                         </CardContent>
                     </Card>
                 )}

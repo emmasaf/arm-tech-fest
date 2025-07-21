@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET() {
 
-    const users = await prisma.festival.findMany();
+    const users = await prisma.event.findMany();
     return NextResponse.json({ message: 'Hello from API!' ,users})
 }
 
