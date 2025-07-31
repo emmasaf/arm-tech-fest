@@ -1,0 +1,359 @@
+{
+  "navigation": {
+    "home": "Home",
+    "events": "Events",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "registerEvent": "Register Event",
+    "createEvent": "Create Event",
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "myTickets": "My Tickets",
+    "profile": "Profile",
+    "settings": "Settings",
+    "helpSupport": "Help & Support",
+    "signOut": "Sign Out",
+    "signingOut": "Signing Out...",
+    "notifications": "Notifications",
+    "menu": "Menu"
+  },
+  "common": {
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Try Again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "submit": "Submit",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "confirm": "Confirm",
+    "free": "Free",
+    "left": "left",
+    "all": "All",
+    "loadingEvents": "Loading events...",
+    "loadingFeaturedEvents": "Loading featured events..."
+  },
+  "homepage": {
+    "hero": {
+      "title": "Discover Amazing Events",
+      "subtitle": "From music and food to culture and art, find the perfect event experience for you",
+      "searchPlaceholder": "Search events...",
+      "browseAllEvents": "Browse All Events",
+      "listYourEvent": "List Your Event"
+    },
+    "featured": {
+      "title": "Featured Events",
+      "subtitle": "Don't miss out on these amazing upcoming events",
+      "viewAllEvents": "View All Events",
+      "noFeaturedEvents": "No Featured Events",
+      "noFeaturedEventsMessage": "Check back soon for exciting upcoming events!",
+      "browseAllEvents": "Browse All Events",
+      "unableToLoad": "Unable to Load Events",
+      "unableToLoadMessage": "We're having trouble loading the featured events."
+    },
+    "stats": {
+      "activeEvents": "Active Events",
+      "ticketsSold": "Tickets Sold",
+      "happyUsers": "Happy Users",
+      "categories": "Categories"
+    },
+    "testimonials": {
+      "title": "What People Are Saying",
+      "subtitle": "Don't just take our word for it - hear from event-goers themselves"
+    },
+    "cta": {
+      "title": "Ready to Start Your Event Journey?",
+      "subtitle": "Browse our curated selection of events and find your next unforgettable experience",
+      "exploreEvents": "Explore Events",
+      "listYourEvent": "List Your Event"
+    }
+  },
+  "events": {
+    "title": "Discover Amazing Events",
+    "subtitle": "From music and food to culture and art, find the perfect event experience for you",
+    "searchPlaceholder": "Search by name, location, or description...",
+    "searchEvents": "Search Events",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "status": "Status",
+    "statusAll": "All",
+    "statusOngoing": "Ongoing",
+    "statusUpcoming": "Upcoming", 
+    "statusFinished": "Finished",
+    "noEventsFound": "No events found",
+    "noEventsMessage": "Try adjusting your search criteria or filters",
+    "viewDetails": "View Details",
+    "showingEvents": "{{shown}} of {{total}} events shown",
+    "failedToLoad": "Failed to Load Events",
+    "failedToLoadMessage": "We're having trouble loading the events. Please try again.",
+    "filters": {
+      "searchLabel": "Search Events",
+      "categoryLabel": "Category",
+      "statusLabel": "Status:",
+      "all": "All",
+      "ongoing": "Ongoing",
+      "upcoming": "Upcoming",
+      "finished": "Finished"
+    }
+  },
+  "eventDetails": {
+    "date": "Date",
+    "time": "Time",
+    "location": "Location",
+    "price": "Price",
+    "capacity": "Capacity",
+    "organizer": "Organizer",
+    "description": "Description",
+    "buyTicket": "Buy Ticket",
+    "soldOut": "Sold Out",
+    "ticketsAvailable": "{{count}} tickets available"
+  },
+  "auth": {
+    "loginTitle": "Login to Your Account",
+    "registerTitle": "Create New Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "organization": "Organization",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "signIn": "Sign in",
+    "invalidEmail": "Invalid email address",
+    "passwordRequired": "Password is required",
+    "registrationSuccess": "Registration successful! You can now sign in with your credentials.",
+    "loginFailed": "Login failed. Please check your credentials."
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "stats": {
+      "totalEvents": "Total Events",
+      "activeEvents": "Active Events",
+      "totalTickets": "Total Tickets",
+      "revenue": "Revenue"
+    }
+  },
+  "registerEvent": {
+    "title": "Register Your Event",
+    "subtitle": "Join our platform and reach thousands of event-goers. Fill out the form below to submit your event for review and approval.",
+    "steps": {
+      "organizer": "Organizer",
+      "eventInfo": "Event Info",
+      "dateTime": "Date & Time",
+      "location": "Location",
+      "details": "Details",
+      "agreement": "Agreement"
+    },
+    "stepTitles": {
+      "organizer": "Tell us about yourself",
+      "eventInfo": "Describe your event",
+      "dateTime": "When is your event?",
+      "location": "Where will it be held?",
+      "details": "Event details & pricing",
+      "agreement": "Review and submit"
+    },
+    "progress": {
+      "step": "Step",
+      "of": "of",
+      "complete": "Complete"
+    },
+    "organizer": {
+      "title": "Organizer Information",
+      "subtitle": "Tell us about yourself and your organization",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "organizationName": "Organization Name",
+      "organizationWebsite": "Organization Website",
+      "organizationDescription": "Organization Description",
+      "placeholders": {
+        "fullName": "Your full name",
+        "email": "your@email.com",
+        "phone": "+1 (555) 123-4567",
+        "organizationName": "Your company/organization",
+        "organizationWebsite": "https://yourwebsite.com",
+        "organizationDescription": "Brief description of your organization and experience in event management..."
+      }
+    },
+    "eventInfo": {
+      "title": "Event Information",
+      "subtitle": "Provide details about your event",
+      "eventName": "Event Name",
+      "category": "Event Category",
+      "eventDescription": "Event Description",
+      "eventWebsite": "Event Website",
+      "socialMediaLinks": "Social Media Links",
+      "placeholders": {
+        "eventName": "Amazing Music Event 2024",
+        "category": "Select event category",
+        "eventDescription": "Describe your event, what makes it special, target audience, activities, performers, etc...",
+        "eventWebsite": "https://yourfestival.com",
+        "socialMediaLinks": "Facebook: https://facebook.com/yourfestival\nInstagram: @yourfestival\nTwitter: @yourfestival"
+      }
+    },
+    "dateTime": {
+      "title": "Date & Time Information",
+      "subtitle": "When will your event take place?",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "guidelines": {
+        "title": "Date Guidelines",
+        "rules": [
+          "Event must be at least 30 days from submission date",
+          "Multi-day events should include all event days",
+          "Consider setup and breakdown time in your planning"
+        ]
+      }
+    },
+    "location": {
+      "title": "Location Information",
+      "subtitle": "Where will your event be held?",
+      "venueName": "Venue Name",
+      "venueAddress": "Venue Address",
+      "city": "City",
+      "state": "State/Province",
+      "zipCode": "ZIP/Postal Code",
+      "country": "Country",
+      "venueType": "Venue Type",
+      "venueAmenities": "Venue Amenities",
+      "wheelchairAccessible": "Wheelchair Accessible",
+      "parkingAvailable": "Parking Available",
+      "placeholders": {
+        "venueName": "Central Park, Convention Center, etc.",
+        "venueAddress": "123 Main Street",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "United States",
+        "venueType": "Select venue type"
+      }
+    },
+    "details": {
+      "title": "Event Details & Pricing",
+      "subtitle": "Provide details about attendance and pricing",
+      "expectedAttendance": "Expected Attendance",
+      "freeEvent": "This is a free event",
+      "ticketPrice": "Ticket Price (USD)",
+      "ageRestriction": "Age Restriction",
+      "eventFeatures": "Event Features",
+      "foodVendors": "Food Vendors Available",
+      "alcoholServed": "Alcohol Will Be Served",
+      "specialRequirements": "Special Requirements",
+      "placeholders": {
+        "expectedAttendance": "Select expected attendance",
+        "ticketPrice": "25.00",
+        "ageRestriction": "Select age restriction",
+        "specialRequirements": "Any special equipment, setup requirements, or considerations..."
+      }
+    },
+    "agreement": {
+      "title": "Legal Information & Agreement",
+      "subtitle": "Final details and terms acceptance",
+      "insuranceInfo": "Insurance Information",
+      "permitsObtained": "I have obtained or will obtain all necessary permits and licenses",
+      "emergencyPlan": "Emergency Plan",
+      "termsAccepted": "I agree to the Terms of Service and Event Organizer Agreement",
+      "dataProcessingAccepted": "I consent to the processing of my personal data as described in the Privacy Policy",
+      "reviewProcess": {
+        "title": "Review Process",
+        "rules": [
+          "Applications are reviewed within 3-5 business days",
+          "We may request additional information or documentation",
+          "Approved events will be contacted to complete setup",
+          "A 5% platform fee applies to all ticket sales"
+        ]
+      },
+      "placeholders": {
+        "insuranceInfo": "Details about your event insurance coverage...",
+        "emergencyPlan": "Brief description of your emergency and safety plan..."
+      }
+    },
+    "categories": {
+      "music": "Music Event",
+      "food": "Food & Drink",
+      "culture": "Cultural Event",
+      "art": "Art & Craft",
+      "technology": "Technology",
+      "sports": "Sports & Recreation",
+      "family": "Family & Kids",
+      "business": "Business & Networking",
+      "other": "Other"
+    },
+    "venueTypes": {
+      "outdoor": "Outdoor Venue",
+      "indoor": "Indoor Venue",
+      "mixed": "Indoor & Outdoor",
+      "virtual": "Virtual Event",
+      "hybrid": "Hybrid (Physical + Virtual)"
+    },
+    "attendance": {
+      "0-100": "0-100 people",
+      "101-500": "101-500 people",
+      "501-1000": "501-1,000 people",
+      "1001-5000": "1,001-5,000 people",
+      "5001-10000": "5,001-10,000 people",
+      "10000+": "10,000+ people"
+    },
+    "ageRestrictions": {
+      "all-ages": "All Ages",
+      "18+": "18+ Only",
+      "21+": "21+ Only",
+      "family": "Family Friendly"
+    },
+    "buttons": {
+      "previous": "Previous",
+      "continue": "Continue",
+      "submitApplication": "Submit Application",
+      "submittingApplication": "Submitting Application...",
+      "backToHome": "Back to Home",
+      "browseEvents": "Browse Events"
+    },
+    "notifications": {
+      "stepCompleted": "Step Completed",
+      "stepSaved": "Step {{step}} saved successfully.",
+      "incompleteStep": "Incomplete Step",
+      "fillRequired": "Please fill in all required fields before proceeding.",
+      "navigation": "Navigation",
+      "returnedToStep": "Returned to step {{step}}.",
+      "incompleteForm": "Incomplete Form",
+      "ensureRequired": "Please ensure all required fields are filled and agreements are accepted.",
+      "submitting": "Submitting...",
+      "processingApplication": "Please wait while we process your application.",
+      "applicationSubmitted": "Application Submitted!",
+      "reviewMessage": "We'll review your application and contact you within 3-5 business days.",
+      "submissionFailed": "Submission Failed",
+      "checkConnection": "Please check your connection and try again."
+    },
+    "success": {
+      "title": "Application Submitted Successfully!",
+      "message": "Thank you for submitting your event registration request. Our team will review your application and get back to you within 3-5 business days.",
+      "nextSteps": {
+        "title": "What happens next?",
+        "steps": [
+          "Our team reviews your application",
+          "We may contact you for additional information",
+          "You'll receive approval/feedback via email",
+          "Once approved, we'll help you set up your event listing"
+        ]
+      }
+    },
+    "errors": {
+      "submissionFailed": "Submission Failed",
+      "failedToSubmit": "Failed to submit application"
+    }
+  }
+}

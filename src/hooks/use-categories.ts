@@ -77,9 +77,9 @@ export const useCreateCategory = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate categories query
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      await queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
   })
 }
@@ -105,10 +105,10 @@ export const useUpdateCategory = (id: string) => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ['category', id] })
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      await queryClient.invalidateQueries({ queryKey: ['category', id] })
+      await queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
   })
 }
@@ -130,9 +130,9 @@ export const useDeleteCategory = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate categories query
-      queryClient.invalidateQueries({ queryKey: ['categories'] })
+      await queryClient.invalidateQueries({ queryKey: ['categories'] })
     },
   })
 }

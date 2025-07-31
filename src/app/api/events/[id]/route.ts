@@ -7,12 +7,13 @@ const prisma = new PrismaClient()
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const event = await prisma.event.findUnique({
       where: { 
-        id: params.id,
+        id: id,
         status: 'PUBLISHED',
         isPublished: true
       },
@@ -99,9 +100,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
@@ -109,7 +111,7 @@ export async function PUT(
     }
 
     const event = await prisma.event.findUnique({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     if (!event) {
@@ -127,7 +129,7 @@ export async function PUT(
     const data = await request.json()
 
     const updatedFestival = await prisma.event.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         ...data,
         updatedAt: new Date()
@@ -151,9 +153,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
@@ -161,7 +164,7 @@ export async function DELETE(
     }
 
     const event = await prisma.event.findUnique({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     if (!event) {
@@ -178,7 +181,7 @@ export async function DELETE(
 
     // Check if event has tickets sold
     const ticketCount = await prisma.ticket.count({
-      where: { eventId: params.id }
+      where: { eventId: id }
     })
 
     if (ticketCount > 0) {
@@ -188,7 +191,7 @@ export async function DELETE(
     }
 
     await prisma.event.delete({
-      where: { id: params.id }
+      where: { id: id }
     })
 
     return NextResponse.json({ message: 'Event deleted successfully' })

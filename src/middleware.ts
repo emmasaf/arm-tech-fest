@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { Role } from '@/generated/prisma'
+import { logger } from '@/lib/logger'
 
 // Define protected routes and their required roles
 const PROTECTED_ROUTES: Record<string, Role[]> = {
@@ -57,6 +58,46 @@ function hasRequiredRole(userRole: Role, requiredRoles: Role[]): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
+  // Handle API route logging
+  if (pathname.startsWith('/api/')) {
+    const user = await getCurrentUser(request)
+    const requestId = Math.random().toString(36).substring(2, 15)
+    const url = new URL(request.url)
+    
+    // Log API request
+    // logger.info({
+    //   requestId,
+    //   method: request.method,
+    //   path: pathname,
+    //   query: Object.fromEntries(url.searchParams.entries()),
+    //   user: user ? {
+    //     id: user.id,
+    //     email: user.email,
+    //     role: user.role
+    //   } : null,
+    //   ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    // }, 'API Request')
+
+    // Add request tracking headers
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-request-id', requestId)
+    
+    if (user) {
+      requestHeaders.set('x-user-id', user.id)
+      requestHeaders.set('x-user-role', user.role)
+      requestHeaders.set('x-user-email', user.email)
+    }
+
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+
+    response.headers.set('x-request-id', requestId)
+    return response
+  }
+
   // Check if the route is protected
   const protectedRoute = Object.keys(PROTECTED_ROUTES).find(route => 
     pathname.startsWith(route)
@@ -98,12 +139,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
+     * Match all request paths including API routes for logging
+     * Exclude static files and images
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|login|register|unauthorized).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 }

@@ -9,6 +9,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { useState } from "react"
 import { useFeaturedEvents } from "@/hooks/use-events"
+import { useTranslations } from "@/contexts/translation-context"
 
 // Static testimonials (could be moved to database if needed)
 const testimonials = [
@@ -37,6 +38,7 @@ const testimonials = [
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const t = useTranslations()
   
   // Fetch featured events from database
   const { 
@@ -62,7 +64,7 @@ export default function HomePage() {
   }
 
   const formatPrice = (price: number, isFree: boolean) => {
-    if (isFree) return "Free"
+    if (isFree) return t('common.free')
     return `$${price.toFixed(2)}`
   }
 
@@ -73,10 +75,10 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="relative container mx-auto px-4 text-center">
           <h1 className="text-4xl lg:text-6xl font-bold mb-6 animate-fade-in-up">
-            Discover <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-violet-400">Amazing</span> Events
+            {t('homepage.hero.title')}
           </h1>
           <p className="text-xl lg:text-2xl mb-8 max-w-3xl mx-auto text-blue-100 animate-fade-in-up scroll-delay-200">
-            From music and food to culture and art, find the perfect event experience for you
+            {t('homepage.hero.subtitle')}
           </p>
           
           {/* Search Form */}
@@ -84,7 +86,7 @@ export default function HomePage() {
             <div className="flex">
               <Input
                 type="text"
-                placeholder="Search events..."
+                placeholder={t('homepage.hero.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 text-gray-900"
@@ -98,13 +100,13 @@ export default function HomePage() {
           <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up scroll-delay-600">
             <Link href="/events">
               <Button size="lg" className="hover-glow">
-                Browse All Events
+                {t('homepage.hero.browseAllEvents')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link href="/register-event">
               <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                List Your Event
+                {t('homepage.hero.listYourEvent')}
               </Button>
             </Link>
           </div>
@@ -116,10 +118,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Featured Events
+              {t('homepage.featured.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Don't miss out on these amazing upcoming events
+              {t('homepage.featured.subtitle')}
             </p>
           </div>
 
@@ -127,7 +129,7 @@ export default function HomePage() {
           {featuredLoading && (
             <div className="text-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-purple-600 mx-auto mb-4" />
-              <p className="text-gray-600">Loading featured events...</p>
+              <p className="text-gray-600">{t('common.loadingFeaturedEvents')}</p>
             </div>
           )}
 
@@ -135,11 +137,11 @@ export default function HomePage() {
           {featuredError && (
             <div className="text-center py-12">
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Unable to Load Events</h3>
-              <p className="text-gray-600 mb-4">We're having trouble loading the featured events.</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('homepage.featured.errorTitle')}</h3>
+              <p className="text-gray-600 mb-4">{t('homepage.featured.errorMessage')}</p>
               <Link href="/events">
                 <Button variant="outline">
-                  View All Events
+                  {t('homepage.featured.viewAllEvents')}
                 </Button>
               </Link>
             </div>
@@ -151,11 +153,11 @@ export default function HomePage() {
               {featuredData.events.length === 0 ? (
                 <div className="text-center py-12">
                   <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No Featured Events</h3>
-                  <p className="text-gray-600 mb-4">Check back soon for exciting upcoming events!</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('homepage.featured.noEventsTitle')}</h3>
+                  <p className="text-gray-600 mb-4">{t('homepage.featured.noEventsMessage')}</p>
                   <Link href="/events">
                     <Button variant="outline">
-                      Browse All Events
+                      {t('homepage.featured.browseAllEvents')}
                     </Button>
                   </Link>
                 </div>
@@ -207,13 +209,13 @@ export default function HomePage() {
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
                               <Users className="h-4 w-4 mr-1" />
-                              <span>{event.availableTickets} left</span>
+                              <span>{event.availableTickets} {t('common.left')}</span>
                             </div>
                           </div>
                           <div className="pt-3">
                             <Link href={`/events/${event.id}`}>
                               <Button className="w-full hover-glow">
-                                View Details
+                                {t('events.viewDetails')}
                               </Button>
                             </Link>
                           </div>
@@ -229,7 +231,7 @@ export default function HomePage() {
                 <div className="text-center">
                   <Link href="/events">
                     <Button variant="outline" size="lg">
-                      View All Events
+                      {t('homepage.featured.viewAllEvents')}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -246,19 +248,19 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="animate-fade-in-up">
               <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">5+</div>
-              <div className="text-gray-600">Active Events</div>
+              <div className="text-gray-600">{t('homepage.stats.activeEvents')}</div>
             </div>
             <div className="animate-fade-in-up scroll-delay-100">
               <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">156+</div>
-              <div className="text-gray-600">Tickets Sold</div>
+              <div className="text-gray-600">{t('homepage.stats.ticketsSold')}</div>
             </div>
             <div className="animate-fade-in-up scroll-delay-200">
               <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">8+</div>
-              <div className="text-gray-600">Happy Users</div>
+              <div className="text-gray-600">{t('homepage.stats.happyUsers')}</div>
             </div>
             <div className="animate-fade-in-up scroll-delay-300">
               <div className="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">6</div>
-              <div className="text-gray-600">Categories</div>
+              <div className="text-gray-600">{t('homepage.stats.categories')}</div>
             </div>
           </div>
         </div>
@@ -269,10 +271,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              What People Are Saying
+              {t('homepage.testimonials.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Don't just take our word for it - hear from event-goers themselves
+              {t('homepage.testimonials.subtitle')}
             </p>
           </div>
           
@@ -301,21 +303,21 @@ export default function HomePage() {
       <section className="py-16 lg:py-24 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl lg:text-4xl font-bold mb-4 animate-fade-in-up">
-            Ready to Start Your Event Journey?
+            {t('homepage.cta.title')}
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto animate-fade-in-up scroll-delay-200">
-            Browse our curated selection of events and find your next unforgettable experience
+            {t('homepage.cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up scroll-delay-400">
             <Link href="/events">
               <Button size="lg" variant="secondary" className="hover-glow">
-                Explore Events
+                {t('homepage.cta.exploreEvents')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link href="/register-event">
               <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                List Your Event
+                {t('homepage.cta.listYourEvent')}
               </Button>
             </Link>
           </div>

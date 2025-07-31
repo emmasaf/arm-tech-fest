@@ -67,6 +67,7 @@ interface FestivalsFilters {
     organizerId?: string
     page?: number
     limit?: number
+    status?: 'all' | 'ongoing' | 'upcoming' | 'finished'
 }
 
 // Get all events with filters
@@ -80,6 +81,7 @@ export const useEvents = (filters: FestivalsFilters = {}) => {
     if (filters.organizerId) queryParams.set('organizerId', filters.organizerId)
     if (filters.page) queryParams.set('page', filters.page.toString())
     if (filters.limit) queryParams.set('limit', filters.limit.toString())
+    if (filters.status && filters.status !== 'all') queryParams.set('status', filters.status)
 
     return useQuery({
         queryKey: ['events', filters],
@@ -170,11 +172,11 @@ export const useCreateEvent = () => {
 
             return response.json()
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             // Invalidate and refetch events
-            queryClient.invalidateQueries({queryKey: ['events']})
-            queryClient.invalidateQueries({queryKey: ['organizer-events']})
-            queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
+            await queryClient.invalidateQueries({queryKey: ['events']})
+            await queryClient.invalidateQueries({queryKey: ['organizer-events']})
+            await queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
         },
     })
 }
@@ -200,12 +202,12 @@ export const useUpdateEvent = (id: string) => {
 
             return response.json()
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             // Invalidate related queries
-            queryClient.invalidateQueries({queryKey: ['event', id]})
-            queryClient.invalidateQueries({queryKey: ['events']})
-            queryClient.invalidateQueries({queryKey: ['organizer-events']})
-            queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
+            await queryClient.invalidateQueries({queryKey: ['event', id]})
+            await queryClient.invalidateQueries({queryKey: ['events']})
+            await queryClient.invalidateQueries({queryKey: ['organizer-events']})
+            await queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
         },
     })
 }
@@ -227,11 +229,11 @@ export const useDeleteEvent = () => {
 
             return response.json()
         },
-        onSuccess: () => {
+        onSuccess: async () => {
             // Invalidate all event-related queries
-            queryClient.invalidateQueries({queryKey: ['events']})
-            queryClient.invalidateQueries({queryKey: ['organizer-events']})
-            queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
+            await queryClient.invalidateQueries({queryKey: ['events']})
+            await queryClient.invalidateQueries({queryKey: ['organizer-events']})
+            await queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
         },
     })
 }

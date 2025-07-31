@@ -16,3 +16,9 @@ services:
 
 volumes:
   pgdata:
+
+# psql -U postgres
+# \l -> list all dbs
+# \c your_database_name
+# \dt list tables
+# psql -U postgres -d fest_db

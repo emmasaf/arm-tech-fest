@@ -158,13 +158,13 @@ export const usePurchaseTicket = () => {
 
             return response.json()
         },
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             // Invalidate and refetch relevant queries
-            queryClient.invalidateQueries({queryKey: ['user-tickets']})
-            queryClient.invalidateQueries({queryKey: ['event-tickets', data.ticket.eventId]})
-            queryClient.invalidateQueries({queryKey: ['events']}) // To update available tickets
-            queryClient.invalidateQueries({queryKey: ['event', data.ticket.eventId]})
-            queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
+            await queryClient.invalidateQueries({queryKey: ['user-tickets']})
+            await queryClient.invalidateQueries({queryKey: ['event-tickets', data.ticket.eventId]})
+            await queryClient.invalidateQueries({queryKey: ['events']}) // To update available tickets
+            await queryClient.invalidateQueries({queryKey: ['event', data.ticket.eventId]})
+            await queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
         },
     })
 }
@@ -190,11 +190,11 @@ export const useUpdateTicket = (ticketId: string) => {
 
             return response.json()
         },
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             // Invalidate related queries
-            queryClient.invalidateQueries({queryKey: ['ticket', ticketId]})
-            queryClient.invalidateQueries({queryKey: ['user-tickets']})
-            queryClient.invalidateQueries({queryKey: ['event-tickets', data.eventId]})
+            await queryClient.invalidateQueries({queryKey: ['ticket', ticketId]})
+            await queryClient.invalidateQueries({queryKey: ['user-tickets']})
+            await queryClient.invalidateQueries({queryKey: ['event-tickets', data.eventId]})
         },
     })
 }
@@ -216,11 +216,11 @@ export const useCancelTicket = () => {
 
             return response.json()
         },
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             // Invalidate relevant queries
-            queryClient.invalidateQueries({queryKey: ['user-tickets']})
-            queryClient.invalidateQueries({queryKey: ['event-tickets']})
-            queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
+            await queryClient.invalidateQueries({queryKey: ['user-tickets']})
+            await queryClient.invalidateQueries({queryKey: ['event-tickets']})
+            await queryClient.invalidateQueries({queryKey: ['dashboard-stats']})
         },
     })
 }

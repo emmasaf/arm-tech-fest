@@ -156,11 +156,11 @@ export const useCreateSupportTicket = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate support tickets queries
-      queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['my-support-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+      await queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['my-support-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
     },
   })
 }
@@ -186,12 +186,12 @@ export const useUpdateSupportTicket = (id: string) => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ['support-ticket', id] })
-      queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+      await queryClient.invalidateQueries({ queryKey: ['support-ticket', id] })
+      await queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
     },
   })
 }
@@ -220,11 +220,11 @@ export const useAssignSupportTicket = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate all support ticket queries
-      queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+      await queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
     },
   })
 }
@@ -253,11 +253,11 @@ export const useResolveSupportTicket = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate all support ticket queries
-      queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+      await queryClient.invalidateQueries({ queryKey: ['support-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['my-assigned-tickets'] })
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
     },
   })
 }

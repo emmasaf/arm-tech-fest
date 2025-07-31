@@ -1,21 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import {useState, useEffect} from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { 
-    Menu, 
-    Calendar, 
-    Info, 
-    Mail, 
-    User, 
-    Plus, 
-    LogIn, 
-    UserPlus, 
-    LogOut, 
+import {usePathname} from "next/navigation"
+import {useSession} from "next-auth/react"
+import {Button} from "@/components/ui/button"
+import {Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle} from "@/components/ui/sheet"
+import {
+    Menu,
+    Calendar,
+    Info,
+    Mail,
+    User,
+    Plus,
+    LogIn,
+    UserPlus,
+    LogOut,
     LayoutDashboard,
     Home,
     X,
@@ -23,11 +23,11 @@ import {
     Ticket,
     Settings,
     HelpCircle,
-    Bell
+    Globe
 } from "lucide-react"
-import { useLogout } from "@/hooks/use-auth"
-import { useAuth } from "@/contexts/auth-context"
-import { cn } from "@/lib/utils"
+import {useLogout} from "@/hooks/use-auth"
+import {useAuth} from "@/contexts/auth-context"
+import {cn} from "@/lib/utils"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -36,17 +36,20 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
+import {Badge} from "@/components/ui/badge"
+import {LanguageSwitcher} from "@/components/language-switcher"
+import {useTranslations} from "@/contexts/translation-context"
 
 export function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
-    const { data: session, status } = useSession()
-    const { user, isAuthenticated } = useAuth()
+    const {data: session, status} = useSession()
+    const {user, isAuthenticated} = useAuth()
     const logoutMutation = useLogout()
     const pathname = usePathname()
-    
+    const t = useTranslations()
+
     // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => {
@@ -61,18 +64,20 @@ export function Navigation() {
         setIsOpen(false)
     }
 
+    // Main navigation items - consistent order and better organization
     const navItems = [
-        { href: "/", label: "Home", icon: Home },
-        { href: "/events", label: "Events", icon: Calendar },
-        { href: "/about", label: "About", icon: Info },
-        { href: "/contact", label: "Contact", icon: Mail },
+        {href: "/", label: t('navigation.home'), icon: Home},
+        {href: "/events", label: t('navigation.events'), icon: Calendar},
+        {href: "/about", label: t('navigation.about'), icon: Info},
+        {href: "/contact", label: t('navigation.contact'), icon: Mail},
     ]
 
+    // User dashboard items - reorganized by frequency of use
     const userMenuItems = [
-        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-        { href: "/dashboard/tickets", label: "My Tickets", icon: Ticket },
-        { href: "/dashboard/profile", label: "Profile", icon: User },
-        { href: "/dashboard/settings", label: "Settings", icon: Settings },
+        {href: "/dashboard", label: t('navigation.dashboard'), icon: LayoutDashboard},
+        {href: "/dashboard/tickets", label: t('navigation.myTickets'), icon: Ticket},
+        {href: "/dashboard/profile", label: t('navigation.profile'), icon: User},
+        {href: "/dashboard/settings", label: t('navigation.settings'), icon: Settings},
     ]
 
     // Get user initials for avatar
@@ -82,25 +87,27 @@ export function Navigation() {
     }
 
     return (
-        <header 
+        <header
             className={cn(
                 "sticky top-0 z-50 w-full transition-all duration-300",
-                isScrolled 
-                    ? "border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm" 
+                isScrolled
+                    ? "border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 shadow-sm"
                     : "bg-white"
             )}
         >
             <div className="container mx-auto px-4">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo - Enhanced with animation */}
-                    <Link 
-                        href="/" 
+                    <Link
+                        href="/"
                         className="flex items-center space-x-2 group"
                     >
-                        <div className="w-9 h-9 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-110 group-hover:rotate-3">
-                            <Calendar className="h-5 w-5 text-white" />
+                        <div
+                            className="w-9 h-9 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center transform transition-transform group-hover:scale-110 group-hover:rotate-3">
+                            <Calendar className="h-5 w-5 text-white"/>
                         </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                        <span
+                            className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
                             ArmEventHub
                         </span>
                     </Link>
@@ -119,68 +126,57 @@ export function Navigation() {
                                 )}
                             >
                                 <span className="flex items-center space-x-2">
-                                    <item.icon className="h-4 w-4" />
+                                    <item.icon className="h-4 w-4"/>
                                     <span>{item.label}</span>
                                 </span>
                             </Link>
                         ))}
                     </nav>
 
-                    {/* Desktop Actions - Enhanced with better UX */}
-                    <div className="hidden lg:flex items-center space-x-3">
-                        {/* Create Event Button - More prominent */}
-                        <Link href="/register-event">
-                            <Button 
-                                variant="outline" 
-                                size="default"
-                                className="border-purple-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200"
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Create Event
-                            </Button>
-                        </Link>
-                        
+                    {/* Desktop Actions - Reorganized for better UX */}
+                    <div className="hidden lg:flex items-center space-x-2">
+                        {/* Language Switcher - Always visible */}
+                        <LanguageSwitcher/>
+
                         {status === "loading" ? (
-                            <div className="flex items-center space-x-3">
-                                <div className="w-32 h-9 bg-gray-200 animate-pulse rounded-lg"></div>
-                                <div className="w-10 h-10 bg-gray-200 animate-pulse rounded-full"></div>
+                            <div className="flex items-center space-x-2">
+                                <div className="w-24 h-9 bg-gray-200 animate-pulse rounded-lg"></div>
+                                <div className="w-8 h-8 bg-gray-200 animate-pulse rounded-full"></div>
                             </div>
                         ) : session ? (
-                            <div className="flex items-center space-x-3">
-                                {/* Notification Bell */}
-                                <Button variant="ghost" size="icon" className="relative">
-                                    <Bell className="h-5 w-5" />
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                                </Button>
+                            <>
+                                {/* Create Event Button - Primary action */}
+                                <Link href={"/register-event"}>
+                                    <Button
+                                        size="sm"
+                                        className="bg-purple-600 hover:bg-purple-700 transition-colors"
+                                    >
+                                        <Plus className="h-4 w-4 mr-1.5"/>
+                                        {t('navigation.createEvent')}
+                                    </Button>
+                                </Link>
 
-                                {/* User Dropdown Menu */}
+
+                                {/* User Dropdown Menu - Compact */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button 
-                                            variant="ghost" 
-                                            className="flex items-center space-x-3 px-3 hover:bg-purple-50"
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="flex items-center space-x-2 px-2 hover:bg-purple-50"
                                         >
-                                            <Avatar className="h-8 w-8">
-                                                <AvatarImage src={session.user?.image || undefined} />
-                                                <AvatarFallback className="bg-purple-600 text-white">
+                                            <Avatar className="h-7 w-7">
+                                                <AvatarImage src={session.user?.image || undefined}/>
+                                                <AvatarFallback className="bg-purple-600 text-white text-xs">
                                                     {getUserInitials(session.user?.name)}
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <div className="flex items-center space-x-2">
-                                                <div className="text-left">
-                                                    <p className="text-sm font-medium">
-                                                        {session.user?.name?.split(' ')[0] || 'User'}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">
-                                                        {user?.role && (
-                                                            <Badge variant="secondary" className="text-xs py-0 px-1">
-                                                                {user.role}
-                                                            </Badge>
-                                                        )}
-                                                    </p>
-                                                </div>
-                                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                                            <div className="text-left hidden xl:block">
+                                                <p className="text-sm font-medium leading-none">
+                                                    {session.user?.name?.split(' ')[0] || 'User'}
+                                                </p>
                                             </div>
+                                            <ChevronDown className="h-3 w-3 text-gray-500"/>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-56">
@@ -188,111 +184,131 @@ export function Navigation() {
                                             <div className="flex flex-col space-y-1">
                                                 <p className="text-sm font-medium">{session.user?.name}</p>
                                                 <p className="text-xs text-gray-500">{session.user?.email}</p>
+                                                {user?.role && (
+                                                    <Badge variant="secondary" className="text-xs py-0 px-1 w-fit">
+                                                        {user.role}
+                                                    </Badge>
+                                                )}
                                             </div>
                                         </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
+                                        <DropdownMenuSeparator/>
                                         {userMenuItems.map((item) => (
                                             <DropdownMenuItem key={item.href} asChild>
-                                                <Link 
+                                                <Link
                                                     href={item.href}
                                                     className="flex items-center space-x-2 cursor-pointer"
                                                 >
-                                                    <item.icon className="h-4 w-4" />
+                                                    <item.icon className="h-4 w-4"/>
                                                     <span>{item.label}</span>
                                                 </Link>
                                             </DropdownMenuItem>
                                         ))}
-                                        <DropdownMenuSeparator />
+                                        <DropdownMenuSeparator/>
                                         <DropdownMenuItem asChild>
-                                            <Link 
-                                                href="/help"
+                                            <Link
+                                                href={"/help"}
                                                 className="flex items-center space-x-2 cursor-pointer"
                                             >
-                                                <HelpCircle className="h-4 w-4" />
-                                                <span>Help & Support</span>
+                                                <HelpCircle className="h-4 w-4"/>
+                                                <span>{t('navigation.helpSupport')}</span>
                                             </Link>
                                         </DropdownMenuItem>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem 
+                                        <DropdownMenuSeparator/>
+                                        <DropdownMenuItem
                                             onClick={handleLogout}
                                             disabled={logoutMutation.isPending}
                                             className="text-red-600 cursor-pointer"
                                         >
-                                            <LogOut className="h-4 w-4 mr-2" />
-                                            {logoutMutation.isPending ? 'Signing Out...' : 'Sign Out'}
+                                            <LogOut className="h-4 w-4 mr-2"/>
+                                            {logoutMutation.isPending ? t('navigation.signingOut') : t('navigation.signOut')}
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                            </div>
+                            </>
                         ) : (
-                            <div className="flex items-center space-x-3">
-                                <Link href="/login">
-                                    <Button variant="ghost">
-                                        Sign In
+                            <>
+                                <Link href={"/login"}>
+                                    <Button variant="ghost" size="sm">
+                                        {t('navigation.signIn')}
                                     </Button>
                                 </Link>
-                                <Link href="/register">
-                                    <Button className="bg-purple-600 hover:bg-purple-700">
-                                        Get Started
+                                <Link href={"/register-event"}>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="border-purple-200 hover:bg-purple-50"
+                                    >
+                                        <Plus className="h-4 w-4 mr-1"/>
+                                        {t('navigation.createEvent')}
                                     </Button>
                                 </Link>
-                            </div>
+                                <Link href={"/register"}>
+                                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+                                        {t('navigation.getStarted')}
+                                    </Button>
+                                </Link>
+                            </>
                         )}
                     </div>
 
-                    {/* Tablet Actions (md screens) - Show compact version */}
+                    {/* Tablet Actions (md screens) - Improved compact version */}
                     <div className="hidden md:flex lg:hidden items-center space-x-2">
+                        <LanguageSwitcher/>
                         {session ? (
                             <>
+                                <Link href="/register-event">
+                                    <Button size="icon" variant="outline" className="border-purple-200">
+                                        <Plus className="h-4 w-4"/>
+                                    </Button>
+                                </Link>
                                 <Link href="/dashboard">
                                     <Button size="icon" variant="ghost">
-                                        <LayoutDashboard className="h-5 w-5" />
+                                        <LayoutDashboard className="h-4 w-4"/>
                                     </Button>
                                 </Link>
                                 <Button size="icon" variant="ghost" onClick={handleLogout}>
-                                    <LogOut className="h-5 w-5" />
+                                    <LogOut className="h-4 w-4"/>
                                 </Button>
                             </>
                         ) : (
-                            <Link href="/login">
-                                <Button size="sm">Sign In</Button>
-                            </Link>
+                            <>
+                                <Link href={"/login"}>
+                                    <Button size="sm" variant="ghost">{t('navigation.signIn')}</Button>
+                                </Link>
+                                <Link href={"/register"}>
+                                    <Button size="sm" className="bg-purple-600">{t('navigation.getStarted')}</Button>
+                                </Link>
+                            </>
                         )}
                     </div>
 
                     {/* Mobile Menu Button - Enhanced */}
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild className="lg:hidden">
-                            <Button 
-                                variant="ghost" 
+                        <SheetTrigger asChild className="md:hidden">
+                            <Button
+                                variant="ghost"
                                 size="icon"
                                 className="hover:bg-purple-50"
+                                aria-label={t('navigation.menu')}
                             >
-                                <Menu className="h-5 w-5" />
+                                <Menu className="h-5 w-5"/>
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-full sm:w-80 p-0">
                             <SheetHeader className="border-b px-6 py-4">
                                 <div className="flex items-center justify-between">
-                                    <SheetTitle className="text-lg">Menu</SheetTitle>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setIsOpen(false)}
-                                        className="h-8 w-8"
-                                    >
-                                        <X className="h-4 w-4" />
-                                    </Button>
+                                    <SheetTitle className="text-lg">{t('navigation.menu')}</SheetTitle>
+                                    <LanguageSwitcher/>
                                 </div>
                             </SheetHeader>
-                            
+
                             <div className="flex flex-col h-full">
                                 {/* User Info Section */}
                                 {session && (
                                     <div className="px-6 py-4 bg-purple-50 border-b">
                                         <div className="flex items-center space-x-3">
                                             <Avatar className="h-12 w-12">
-                                                <AvatarImage src={session.user?.image || undefined} />
+                                                <AvatarImage src={session.user?.image || undefined}/>
                                                 <AvatarFallback className="bg-purple-600 text-white">
                                                     {getUserInitials(session.user?.name)}
                                                 </AvatarFallback>
@@ -320,7 +336,7 @@ export function Navigation() {
                                                         : "text-gray-700 hover:bg-gray-50"
                                                 )}
                                             >
-                                                <item.icon className="h-5 w-5" />
+                                                <item.icon className="h-5 w-5"/>
                                                 <span className="font-medium">{item.label}</span>
                                             </Link>
                                         ))}
@@ -343,7 +359,7 @@ export function Navigation() {
                                                                 : "text-gray-700 hover:bg-gray-50"
                                                         )}
                                                     >
-                                                        <item.icon className="h-5 w-5" />
+                                                        <item.icon className="h-5 w-5"/>
                                                         <span className="font-medium">{item.label}</span>
                                                     </Link>
                                                 ))}
@@ -353,44 +369,48 @@ export function Navigation() {
                                 </nav>
 
                                 {/* Bottom Actions */}
-                                <div className="border-t px-6 py-4 space-y-3">
-                                    <Link href="/register-event" onClick={() => setIsOpen(false)}>
+                                <div className="border-t px-6 py-4 flex flex-col gap-1">
+                                    <Link href={"/register-event"} onClick={() => setIsOpen(false)}>
                                         <Button variant="outline" className="w-full">
-                                            <Plus className="h-4 w-4 mr-2" />
-                                            Create Event
+                                            <Plus className="h-4 w-4 mr-2"/>
+                                            {t('navigation.createEvent')}
                                         </Button>
                                     </Link>
-                                    
-                                    {status === "loading" ? (
-                                        <div className="space-y-3">
-                                            <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
-                                            <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
-                                        </div>
-                                    ) : session ? (
-                                        <Button 
-                                            variant="outline" 
-                                            className="w-full text-red-600 border-red-200 hover:bg-red-50"
-                                            onClick={handleLogout}
-                                            disabled={logoutMutation.isPending}
-                                        >
-                                            <LogOut className="h-4 w-4 mr-2" />
-                                            {logoutMutation.isPending ? 'Signing Out...' : 'Sign Out'}
-                                        </Button>
-                                    ) : (
-                                        <div className="space-y-3">
-                                            <Link href="/login" onClick={() => setIsOpen(false)}>
-                                                <Button variant="outline" className="w-full">
-                                                    Sign In
-                                                </Button>
-                                            </Link>
-                                            <Link href="/register" onClick={() => setIsOpen(false)}>
-                                                <Button className="w-full bg-purple-600 hover:bg-purple-700">
-                                                    Get Started
-                                                </Button>
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
+
+                                        {status === "loading" ? (
+                                            <div className="space-y-3">
+                                                <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+                                                <div className="w-full h-10 bg-gray-200 animate-pulse rounded-lg"></div>
+                                            </div>
+                                        ) : session ? (
+                                            <Button
+                                                variant="outline"
+                                                className="w-full text-red-600 border-red-200 hover:bg-red-50"
+                                                onClick={handleLogout}
+                                                disabled={logoutMutation.isPending}
+                                            >
+                                                <LogOut className="h-4 w-4 mr-2"/>
+                                                {logoutMutation.isPending ? t('navigation.signingOut') : t('navigation.signOut')}
+                                            </Button>
+                                        ) : (
+                                            <div className='flex flex-col gap-4'>
+                                                <div className="space-y-3">
+                                                    <Link href={"/login"} onClick={() => setIsOpen(false)}>
+                                                        <Button variant="outline" className="w-full">
+                                                            {t('navigation.signIn')}
+                                                        </Button>
+                                                    </Link>
+                                                </div>
+                                                <div className="mt-2">
+                                                    <Link href={"/register"} onClick={() => setIsOpen(false)}>
+                                                        <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                                                            {t('navigation.getStarted')}
+                                                        </Button>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                             </div>
                         </SheetContent>
                     </Sheet>

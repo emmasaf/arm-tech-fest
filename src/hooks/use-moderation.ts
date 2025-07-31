@@ -165,108 +165,13 @@ export const useReviewFestivalRequest = () => {
       
       return response.json()
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate event requests queries
-      queryClient.invalidateQueries({ queryKey: ['event-requests'] })
-      queryClient.invalidateQueries({ queryKey: ['pending-event-requests'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+      await queryClient.invalidateQueries({ queryKey: ['event-requests'] })
+      await queryClient.invalidateQueries({ queryKey: ['pending-event-requests'] })
+      await queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
       // Also invalidate events list in case of approval
-      queryClient.invalidateQueries({ queryKey: ['events'] })
+      await queryClient.invalidateQueries({ queryKey: ['events'] })
     },
-  })
-}
-
-// Approve event request
-export const useApproveFestivalRequest = () => {
-  const reviewMutation = useReviewFestivalRequest()
-
-  return useMutation({
-    mutationFn: async ({ 
-      requestId, 
-      reviewNotes 
-    }: { 
-      requestId: string
-      reviewNotes?: string 
-    }) => {
-      return reviewMutation.mutateAsync({
-        requestId,
-        reviewData: {
-          status: 'APPROVED',
-          reviewNotes
-        }
-      })
-    },
-    onSuccess: reviewMutation.onSuccess,
-  })
-}
-
-// Reject event request
-export const useRejectFestivalRequest = () => {
-  const reviewMutation = useReviewFestivalRequest()
-
-  return useMutation({
-    mutationFn: async ({ 
-      requestId, 
-      rejectionReason,
-      reviewNotes
-    }: { 
-      requestId: string
-      rejectionReason: string
-      reviewNotes?: string 
-    }) => {
-      return reviewMutation.mutateAsync({
-        requestId,
-        reviewData: {
-          status: 'REJECTED',
-          rejectionReason,
-          reviewNotes
-        }
-      })
-    },
-    onSuccess: reviewMutation.onSuccess,
-  })
-}
-
-// Put request under review
-export const usePutRequestUnderReview = () => {
-  const reviewMutation = useReviewFestivalRequest()
-
-  return useMutation({
-    mutationFn: async ({ 
-      requestId, 
-      reviewNotes 
-    }: { 
-      requestId: string
-      reviewNotes: string 
-    }) => {
-      return reviewMutation.mutateAsync({
-        requestId,
-        reviewData: {
-          status: 'UNDER_REVIEW',
-          reviewNotes
-        }
-      })
-    },
-    onSuccess: reviewMutation.onSuccess,
-  })
-}
-
-// Get moderation statistics
-export const useModerationStats = () => {
-  return useQuery({
-    queryKey: ['moderation-stats'],
-    queryFn: async () => {
-      const [pendingRequests, underReviewRequests] = await Promise.all([
-        fetch('/api/moderation/event-requests?status=PENDING').then(r => r.json()),
-        fetch('/api/moderation/event-requests?status=UNDER_REVIEW').then(r => r.json())
-      ])
-
-      return {
-        pendingCount: pendingRequests.pagination?.total || 0,
-        underReviewCount: underReviewRequests.pagination?.total || 0,
-        totalPendingWork: (pendingRequests.pagination?.total || 0) + (underReviewRequests.pagination?.total || 0)
-      }
-    },
-    staleTime: 1 * 60 * 1000, // 1 minute
   })
 }

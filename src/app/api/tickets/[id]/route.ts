@@ -7,10 +7,10 @@ const prisma = new PrismaClient()
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const ticketId = params.id
+    const { id: ticketId } = await params
 
     if (!ticketId) {
       return NextResponse.json({ error: 'Ticket ID is required' }, { status: 400 })
@@ -57,16 +57,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: ticketId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const ticketId = params.id
     const data = await request.json()
 
     // Find the ticket
@@ -125,9 +124,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id: ticketId } = await params
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
@@ -138,8 +138,6 @@ export async function DELETE(
     if (!['ADMIN', 'SUPER_ADMIN'].includes(session.user.role)) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
-
-    const ticketId = params.id
 
     // Find the ticket
     const existingTicket = await prisma.ticket.findFirst({

@@ -13,35 +13,10 @@ import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar, MapPin, Users, DollarSign, Upload, CheckCircle, Info } from "lucide-react"
 import { useScrollAnimations } from "@/app/hooks/use-scroll-animation"
-
-const festivalCategories = [
-    { value: "music", label: "Music Event" },
-    { value: "food", label: "Food & Drink" },
-    { value: "culture", label: "Cultural Event" },
-    { value: "art", label: "Art & Craft" },
-    { value: "technology", label: "Technology" },
-    { value: "sports", label: "Sports & Recreation" },
-    { value: "family", label: "Family & Kids" },
-    { value: "business", label: "Business & Networking" },
-    { value: "other", label: "Other" },
-]
-
-const venueTypes = [
-    { value: "outdoor", label: "Outdoor Venue" },
-    { value: "indoor", label: "Indoor Venue" },
-    { value: "mixed", label: "Indoor & Outdoor" },
-    { value: "virtual", label: "Virtual Event" },
-    { value: "hybrid", label: "Hybrid (Physical + Virtual)" },
-]
-
-const expectedAttendance = [
-    { value: "0-100", label: "0-100 people" },
-    { value: "101-500", label: "101-500 people" },
-    { value: "501-1000", label: "501-1,000 people" },
-    { value: "1001-5000", label: "1,001-5,000 people" },
-    { value: "5001-10000", label: "5,001-10,000 people" },
-    { value: "10000+", label: "10,000+ people" },
-]
+import { useMutation } from "@tanstack/react-query"
+import { useNotification } from "@/contexts/toast-context"
+import { useRouter } from "next/navigation"
+import { useTranslations } from "@/contexts/translation-context"
 
 interface FormData {
     // Organizer Information
@@ -98,53 +73,120 @@ interface FormData {
 }
 
 export default function RegisterFestivalPage() {
+    const notification = useNotification()
+    const router = useRouter()
+    const t = useTranslations()
+
+    // Translation-based arrays
+    const festivalCategories = [
+        { value: "music", label: t("registerEvent.categories.music") },
+        { value: "food", label: t("registerEvent.categories.food") },
+        { value: "culture", label: t("registerEvent.categories.culture") },
+        { value: "art", label: t("registerEvent.categories.art") },
+        { value: "technology", label: t("registerEvent.categories.technology") },
+        { value: "sports", label: t("registerEvent.categories.sports") },
+        { value: "family", label: t("registerEvent.categories.family") },
+        { value: "business", label: t("registerEvent.categories.business") },
+        { value: "other", label: t("registerEvent.categories.other") },
+    ]
+
+    const venueTypes = [
+        { value: "outdoor", label: t("registerEvent.venueTypes.outdoor") },
+        { value: "indoor", label: t("registerEvent.venueTypes.indoor") },
+        { value: "mixed", label: t("registerEvent.venueTypes.mixed") },
+        { value: "virtual", label: t("registerEvent.venueTypes.virtual") },
+        { value: "hybrid", label: t("registerEvent.venueTypes.hybrid") },
+    ]
+
+    const expectedAttendance = [
+        { value: "0-100", label: t("registerEvent.attendance.0-100") },
+        { value: "101-500", label: t("registerEvent.attendance.101-500") },
+        { value: "501-1000", label: t("registerEvent.attendance.501-1000") },
+        { value: "1001-5000", label: t("registerEvent.attendance.1001-5000") },
+        { value: "5001-10000", label: t("registerEvent.attendance.5001-10000") },
+        { value: "10000+", label: t("registerEvent.attendance.10000+") },
+    ]
+
     const [formData, setFormData] = useState<FormData>({
-        organizerName: "",
-        organizerEmail: "",
-        organizerPhone: "",
-        organizationName: "",
-        organizationWebsite: "",
-        organizationDescription: "",
-        eventName: "",
-        eventDescription: "",
-        category: "",
-        startDate: "",
-        endDate: "",
-        startTime: "",
-        endTime: "",
-        venueName: "",
-        venueAddress: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        organizerName: "Sarah Johnson",
+        organizerEmail: "sarah.johnson@musicevents.com",
+        organizerPhone: "+1 (555) 123-4567",
+        organizationName: "Harmony Music Productions",
+        organizationWebsite: "https://harmonymusicprod.com",
+        organizationDescription: "Harmony Music Productions is a premier event management company specializing in outdoor music festivals and cultural events. With over 10 years of experience, we've successfully organized 50+ events across the country.",
+        eventName: "Summer Harmony Music Festival 2025",
+        eventDescription: "Join us for the ultimate summer music experience! Summer Harmony Festival brings together top indie bands, local artists, and emerging talent for a weekend of unforgettable performances. Featuring 3 stages, 40+ artists, artisan food vendors, craft workshops, and a dedicated family zone. This eco-friendly event celebrates music, community, and sustainability.",
+        category: "music",
+        startDate: "2025-06-15",
+        endDate: "2025-07-17",
+        startTime: "10:00",
+        endTime: "23:00",
+        venueName: "Riverside Park Amphitheater",
+        venueAddress: "1234 River Road",
+        city: "Austin",
+        state: "TX",
+        zipCode: "78701",
         country: "United States",
-        venueType: "",
-        expectedAttendance: "",
-        ticketPrice: "",
+        venueType: "outdoor",
+        expectedAttendance: "1001-5000",
+        ticketPrice: "75",
         freeEvent: false,
-        ageRestriction: "",
-        accessibility: false,
-        parking: false,
-        foodVendors: false,
-        alcoholServed: false,
-        websiteUrl: "",
-        socialMediaLinks: "",
-        previousEvents: "",
-        marketingPlan: "",
-        specialRequirements: "",
-        insuranceInfo: "",
-        permitsObtained: false,
-        emergencyPlan: "",
-        termsAccepted: false,
-        dataProcessingAccepted: false,
+        ageRestriction: "all-ages",
+        accessibility: true,
+        parking: true,
+        foodVendors: true,
+        alcoholServed: true,
+        websiteUrl: "https://summerharmonyfest.com",
+        socialMediaLinks: "Facebook: https://facebook.com/summerharmonyfest\nInstagram: @summerharmony\nTwitter: @harmonyfest2024",
+        previousEvents: "2023 Spring Harmony Festival - 3,500 attendees\n2022 Summer Harmony Festival - 4,200 attendees\n2021 Virtual Harmony Fest - 10,000 online viewers",
+        marketingPlan: "Multi-channel marketing campaign including social media advertising, local radio partnerships, influencer collaborations, and street team promotions. Early bird ticket sales starting 3 months prior.",
+        specialRequirements: "Need 3-phase power for main stage, water stations throughout venue, dedicated vendor loading area, and backstage artist facilities including green rooms and catering area.",
+        insuranceInfo: "General liability coverage through EventGuard Insurance - Policy #EG2024-78901, $2M coverage. Additional vendor insurance required for all food/beverage vendors.",
+        permitsObtained: true,
+        emergencyPlan: "Comprehensive emergency response plan including on-site medical team, security personnel, evacuation procedures, and coordination with local fire and police departments. Weather monitoring system in place.",
+        termsAccepted: true,
+        dataProcessingAccepted: true,
     })
 
     const [currentStep, setCurrentStep] = useState(1)
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
     
     useScrollAnimations();
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
+
+    const submitEventMutation = useMutation({
+        mutationFn: async (data: FormData) => {
+            const response = await fetch('/api/event-requests', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.error || 'Failed to submit application')
+            }
+            return result
+        },
+        onSuccess: () => {
+            notification.success(
+                t("registerEvent.notifications.applicationSubmitted"),
+                t("registerEvent.notifications.reviewMessage")
+            )
+            // Reset form or redirect after a delay
+            setTimeout(() => {
+                router.push('/')
+            }, 2000)
+        },
+        onError: (error: Error) => {
+            notification.error(
+                t("registerEvent.notifications.submissionFailed"),
+                error.message || t("registerEvent.notifications.checkConnection")
+            )
+        },
+    })
 
     const totalSteps = 6
 
@@ -154,6 +196,11 @@ export default function RegisterFestivalPage() {
             ...prev,
             [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
         }))
+        
+        // Clear any previous errors when user starts typing
+        if (submitEventMutation.isError) {
+            submitEventMutation.reset()
+        }
     }
 
     const handleSelectChange = (name: string, value: string) => {
@@ -161,6 +208,11 @@ export default function RegisterFestivalPage() {
             ...prev,
             [name]: value,
         }))
+        
+        // Clear any previous errors when user makes a selection
+        if (submitEventMutation.isError) {
+            submitEventMutation.reset()
+        }
     }
 
     const handleCheckboxChange = (name: string, checked: boolean) => {
@@ -168,6 +220,19 @@ export default function RegisterFestivalPage() {
             ...prev,
             [name]: checked,
         }))
+        
+        // Clear any previous errors when user changes checkbox
+        if (submitEventMutation.isError) {
+            submitEventMutation.reset()
+        }
+        
+        // Special handling for free event checkbox
+        if (name === "freeEvent" && checked) {
+            setFormData((prev) => ({
+                ...prev,
+                ticketPrice: "0",
+            }))
+        }
     }
 
     const handleFileUpload = (fileName: string) => {
@@ -175,27 +240,47 @@ export default function RegisterFestivalPage() {
     }
 
     const nextStep = () => {
-        if (currentStep < totalSteps) {
+        if (currentStep < totalSteps && isStepValid(currentStep)) {
+            notification.success(
+                t("registerEvent.notifications.stepCompleted"),
+                t("registerEvent.notifications.stepSaved", { step: currentStep.toString() })
+            )
             setCurrentStep(currentStep + 1)
+        } else if (!isStepValid(currentStep)) {
+            notification.warning(
+                t("registerEvent.notifications.incompleteStep"),
+                t("registerEvent.notifications.fillRequired")
+            )
         }
     }
 
     const prevStep = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1)
+            notification.info(
+                t("registerEvent.notifications.navigation"),
+                t("registerEvent.notifications.returnedToStep", { step: (currentStep - 1).toString() })
+            )
         }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setIsSubmitting(true)
-        setSubmitStatus("idle")
+        
+        // Validate all required fields are filled
+        if (!isStepValid(totalSteps)) {
+            notification.warning(
+                t("registerEvent.notifications.incompleteForm"),
+                t("registerEvent.notifications.ensureRequired")
+            )
+            return
+        }
 
-        // Simulate form submission
-        setTimeout(() => {
-            setSubmitStatus("success")
-            setIsSubmitting(false)
-        }, 3000)
+        // Show loading notification
+        notification.info(t("registerEvent.notifications.submitting"), t("registerEvent.notifications.processingApplication"))
+        
+        // Submit the form
+        submitEventMutation.mutate(formData)
     }
 
     const isStepValid = (step: number) => {
@@ -217,7 +302,7 @@ export default function RegisterFestivalPage() {
         }
     }
 
-    if (submitStatus === "success") {
+    if (submitEventMutation.isSuccess) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="max-w-2xl mx-auto px-4">
@@ -226,24 +311,23 @@ export default function RegisterFestivalPage() {
                             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-scale-in">
                                 <CheckCircle className="h-8 w-8 text-green-600" />
                             </div>
-                            <h1 className="text-2xl font-bold text-green-800 mb-4 scroll-fade-up scroll-delay-200">Application Submitted Successfully!</h1>
+                            <h1 className="text-2xl font-bold text-green-800 mb-4 scroll-fade-up scroll-delay-200">{t("registerEvent.success.title")}</h1>
                             <p className="text-green-700 mb-6">
-                                Thank you for submitting your event registration request. Our team will review your application and
-                                get back to you within 3-5 business days.
+                                {t("registerEvent.success.message")}
                             </p>
                             <div className="bg-white rounded-lg p-4 mb-6">
-                                <h3 className="font-semibold mb-2">What happens next?</h3>
+                                <h3 className="font-semibold mb-2">{t("registerEvent.success.nextSteps.title")}</h3>
                                 <ul className="text-sm text-gray-600 space-y-1 text-left">
-                                    <li>• Our team reviews your application</li>
-                                    <li>• We may contact you for additional information</li>
-                                    <li>• You'll receive approval/feedback via email</li>
-                                    <li>• Once approved, we'll help you set up your event listing</li>
+                                    <li>• {t("registerEvent.success.nextSteps.steps.0")}</li>
+                                    <li>• {t("registerEvent.success.nextSteps.steps.1")}</li>
+                                    <li>• {t("registerEvent.success.nextSteps.steps.2")}</li>
+                                    <li>• {t("registerEvent.success.nextSteps.steps.3")}</li>
                                 </ul>
                             </div>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center scroll-fade-up scroll-delay-600">
-                                <Button onClick={() => (window.location.href = "/")} className="hover-glow">Back to Home</Button>
-                                <Button variant="outline" onClick={() => (window.location.href = "/events")} className="hover-lift">
-                                    Browse Events
+                                <Button onClick={() => router.push("/")} className="hover-glow">{t("registerEvent.buttons.backToHome")}</Button>
+                                <Button variant="outline" onClick={() => router.push("/events")} className="hover-lift">
+                                    {t("registerEvent.buttons.browseEvents")}
                                 </Button>
                             </div>
                         </CardContent>
@@ -258,10 +342,9 @@ export default function RegisterFestivalPage() {
             <div className="container mx-auto px-4 py-8">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold mb-4 ">Register Your Event</h1>
+                    <h1 className="text-4xl font-bold mb-4 ">{t("registerEvent.title")}</h1>
                     <p className="text-gray-600 text-lg max-w-3xl mx-auto ">
-                        Join our platform and reach thousands of event-goers. Fill out the form below to submit your event for
-                        review and approval.
+                        {t("registerEvent.subtitle")}
                     </p>
                 </div>
 
@@ -278,12 +361,12 @@ export default function RegisterFestivalPage() {
                         {/* Step Indicators */}
                         <div className="relative flex justify-between">
                             {[
-                                { step: 1, title: "Organizer", icon: Users },
-                                { step: 2, title: "Event Info", icon: Calendar },
-                                { step: 3, title: "Date & Time", icon: Calendar },
-                                { step: 4, title: "Location", icon: MapPin },
-                                { step: 5, title: "Details", icon: DollarSign },
-                                { step: 6, title: "Agreement", icon: CheckCircle }
+                                { step: 1, title: t("registerEvent.steps.organizer"), icon: Users },
+                                { step: 2, title: t("registerEvent.steps.eventInfo"), icon: Calendar },
+                                { step: 3, title: t("registerEvent.steps.dateTime"), icon: Calendar },
+                                { step: 4, title: t("registerEvent.steps.location"), icon: MapPin },
+                                { step: 5, title: t("registerEvent.steps.details"), icon: DollarSign },
+                                { step: 6, title: t("registerEvent.steps.agreement"), icon: CheckCircle }
                             ].map(({ step, title, icon: Icon }) => {
                                 const isCompleted = step < currentStep
                                 const isCurrent = step === currentStep
@@ -322,7 +405,7 @@ export default function RegisterFestivalPage() {
                                                 {title}
                                             </div>
                                             <div className="text-xs text-gray-400 mt-1">
-                                                Step {step}
+                                                {t("registerEvent.progress.step")} {step}
                                             </div>
                                         </div>
                                         
@@ -340,16 +423,16 @@ export default function RegisterFestivalPage() {
                     <div className="text-center mt-6">
                         <div className="text-lg font-semibold text-gray-800 mb-1">
                             {[
-                                "Tell us about yourself",
-                                "Describe your event", 
-                                "When is your event?",
-                                "Where will it be held?",
-                                "Event details & pricing",
-                                "Review and submit"
+                                t("registerEvent.stepTitles.organizer"),
+                                t("registerEvent.stepTitles.eventInfo"), 
+                                t("registerEvent.stepTitles.dateTime"),
+                                t("registerEvent.stepTitles.location"),
+                                t("registerEvent.stepTitles.details"),
+                                t("registerEvent.stepTitles.agreement")
                             ][currentStep - 1]}
                         </div>
                         <div className="text-sm text-gray-500">
-                            Step {currentStep} of {totalSteps} • {Math.round((currentStep / totalSteps) * 100)}% Complete
+                            {t("registerEvent.progress.step")} {currentStep} {t("registerEvent.progress.of")} {totalSteps} • {Math.round((currentStep / totalSteps) * 100)}% {t("registerEvent.progress.complete")}
                         </div>
                         <div className="w-32 bg-gray-200 rounded-full h-2 mx-auto mt-2">
                             <div 
@@ -360,6 +443,27 @@ export default function RegisterFestivalPage() {
                     </div>
                 </div>
 
+                {/* Error Display - Show mutation error if any */}
+                {submitEventMutation.isError && (
+                    <div className="max-w-4xl mx-auto mb-6">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <div className="flex items-start gap-3">
+                                <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-medium text-red-800 mb-1">{t("registerEvent.errors.submissionFailed")}</h3>
+                                    <p className="text-sm text-red-700">
+                                        {submitEventMutation.error?.message || t("registerEvent.errors.failedToSubmit")}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
                     {/* Step 1: Organizer Information */}
                     {currentStep === 1 && (
@@ -367,25 +471,25 @@ export default function RegisterFestivalPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Users className="h-5 w-5" />
-                                    Organizer Information
+                                    {t("registerEvent.organizer.title")}
                                 </CardTitle>
-                                <CardDescription>Tell us about yourself and your organization</CardDescription>
+                                <CardDescription>{t("registerEvent.organizer.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
-                                        <Label htmlFor="organizerName">Full Name *</Label>
+                                        <Label htmlFor="organizerName">{t("registerEvent.organizer.fullName")} *</Label>
                                         <Input
                                             id="organizerName"
                                             name="organizerName"
                                             value={formData.organizerName}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="Your full name"
+                                            placeholder={t("registerEvent.organizer.placeholders.fullName")}
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="organizerEmail">Email Address *</Label>
+                                        <Label htmlFor="organizerEmail">{t("registerEvent.organizer.email")} *</Label>
                                         <Input
                                             id="organizerEmail"
                                             name="organizerEmail"
@@ -393,14 +497,14 @@ export default function RegisterFestivalPage() {
                                             value={formData.organizerEmail}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="your@email.com"
+                                            placeholder={t("registerEvent.organizer.placeholders.email")}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
-                                        <Label htmlFor="organizerPhone">Phone Number *</Label>
+                                        <Label htmlFor="organizerPhone">{t("registerEvent.organizer.phone")} *</Label>
                                         <Input
                                             id="organizerPhone"
                                             name="organizerPhone"
@@ -408,43 +512,43 @@ export default function RegisterFestivalPage() {
                                             value={formData.organizerPhone}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="+1 (555) 123-4567"
+                                            placeholder={t("registerEvent.organizer.placeholders.phone")}
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="organizationName">Organization Name *</Label>
+                                        <Label htmlFor="organizationName">{t("registerEvent.organizer.organizationName")} *</Label>
                                         <Input
                                             id="organizationName"
                                             name="organizationName"
                                             value={formData.organizationName}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="Your company/organization"
+                                            placeholder={t("registerEvent.organizer.placeholders.organizationName")}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="organizationWebsite">Organization Website</Label>
+                                    <Label htmlFor="organizationWebsite">{t("registerEvent.organizer.organizationWebsite")}</Label>
                                     <Input
                                         id="organizationWebsite"
                                         name="organizationWebsite"
                                         type="url"
                                         value={formData.organizationWebsite}
                                         onChange={handleInputChange}
-                                        placeholder="https://yourwebsite.com"
+                                        placeholder={t("registerEvent.organizer.placeholders.organizationWebsite")}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="organizationDescription">Organization Description *</Label>
+                                    <Label htmlFor="organizationDescription">{t("registerEvent.organizer.organizationDescription")} *</Label>
                                     <Textarea
                                         id="organizationDescription"
                                         name="organizationDescription"
                                         value={formData.organizationDescription}
                                         onChange={handleInputChange}
                                         required
-                                        placeholder="Brief description of your organization and experience in event management..."
+                                        placeholder={t("registerEvent.organizer.placeholders.organizationDescription")}
                                         rows={4}
                                     />
                                 </div>
@@ -458,28 +562,28 @@ export default function RegisterFestivalPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Calendar className="h-5 w-5" />
-                                    Event Information
+                                    {t("registerEvent.eventInfo.title")}
                                 </CardTitle>
-                                <CardDescription>Provide details about your event</CardDescription>
+                                <CardDescription>{t("registerEvent.eventInfo.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
-                                    <Label htmlFor="eventName">Event Name *</Label>
+                                    <Label htmlFor="eventName">{t("registerEvent.eventInfo.eventName")} *</Label>
                                     <Input
                                         id="eventName"
                                         name="eventName"
                                         value={formData.eventName}
                                         onChange={handleInputChange}
                                         required
-                                        placeholder="Amazing Music Event 2024"
+                                        placeholder={t("registerEvent.eventInfo.placeholders.eventName")}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="category">Event Category *</Label>
-                                    <Select value={formData.category} onValueChange={(value) => handleSelectChange("category", value)}>
+                                    <Label htmlFor="category">{t("registerEvent.eventInfo.category")} *</Label>
+                                    <Select value={formData.category || undefined} onValueChange={(value) => handleSelectChange("category", value)}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select event category" />
+                                            <SelectValue placeholder={t("registerEvent.eventInfo.placeholders.category")} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {festivalCategories.map((category) => (
@@ -492,38 +596,38 @@ export default function RegisterFestivalPage() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="eventDescription">Event Description *</Label>
+                                    <Label htmlFor="eventDescription">{t("registerEvent.eventInfo.eventDescription")} *</Label>
                                     <Textarea
                                         id="eventDescription"
                                         name="eventDescription"
                                         value={formData.eventDescription}
                                         onChange={handleInputChange}
                                         required
-                                        placeholder="Describe your event, what makes it special, target audience, activities, performers, etc..."
+                                        placeholder={t("registerEvent.eventInfo.placeholders.eventDescription")}
                                         rows={6}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="websiteUrl">Event Website</Label>
+                                    <Label htmlFor="websiteUrl">{t("registerEvent.eventInfo.eventWebsite")}</Label>
                                     <Input
                                         id="websiteUrl"
                                         name="websiteUrl"
                                         type="url"
                                         value={formData.websiteUrl}
                                         onChange={handleInputChange}
-                                        placeholder="https://yourfestival.com"
+                                        placeholder={t("registerEvent.eventInfo.placeholders.eventWebsite")}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="socialMediaLinks">Social Media Links</Label>
+                                    <Label htmlFor="socialMediaLinks">{t("registerEvent.eventInfo.socialMediaLinks")}</Label>
                                     <Textarea
                                         id="socialMediaLinks"
                                         name="socialMediaLinks"
                                         value={formData.socialMediaLinks}
                                         onChange={handleInputChange}
-                                        placeholder="Facebook: https://facebook.com/yourfestival&#10;Instagram: @yourfestival&#10;Twitter: @yourfestival"
+                                        placeholder={t("registerEvent.eventInfo.placeholders.socialMediaLinks")}
                                         rows={3}
                                     />
                                 </div>
@@ -537,14 +641,14 @@ export default function RegisterFestivalPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <Calendar className="h-5 w-5" />
-                                    Date & Time Information
+                                    {t("registerEvent.dateTime.title")}
                                 </CardTitle>
-                                <CardDescription>When will your event take place?</CardDescription>
+                                <CardDescription>{t("registerEvent.dateTime.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
-                                        <Label htmlFor="startDate">Start Date *</Label>
+                                        <Label htmlFor="startDate">{t("registerEvent.dateTime.startDate")} *</Label>
                                         <Input
                                             id="startDate"
                                             name="startDate"
@@ -555,7 +659,7 @@ export default function RegisterFestivalPage() {
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="endDate">End Date *</Label>
+                                        <Label htmlFor="endDate">{t("registerEvent.dateTime.endDate")} *</Label>
                                         <Input
                                             id="endDate"
                                             name="endDate"
@@ -569,7 +673,7 @@ export default function RegisterFestivalPage() {
 
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
-                                        <Label htmlFor="startTime">Start Time *</Label>
+                                        <Label htmlFor="startTime">{t("registerEvent.dateTime.startTime")} *</Label>
                                         <Input
                                             id="startTime"
                                             name="startTime"
@@ -580,7 +684,7 @@ export default function RegisterFestivalPage() {
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="endTime">End Time *</Label>
+                                        <Label htmlFor="endTime">{t("registerEvent.dateTime.endTime")} *</Label>
                                         <Input
                                             id="endTime"
                                             name="endTime"
@@ -596,11 +700,11 @@ export default function RegisterFestivalPage() {
                                     <div className="flex items-start gap-3">
                                         <Info className="h-5 w-5 text-blue-600 mt-0.5" />
                                         <div>
-                                            <h4 className="font-medium text-blue-800 mb-1">Date Guidelines</h4>
+                                            <h4 className="font-medium text-blue-800 mb-1">{t("registerEvent.dateTime.guidelines.title")}</h4>
                                             <ul className="text-sm text-blue-700 space-y-1">
-                                                <li>• Event must be at least 30 days from submission date</li>
-                                                <li>• Multi-day events should include all event days</li>
-                                                <li>• Consider setup and breakdown time in your planning</li>
+                                                <li>• {t("registerEvent.dateTime.guidelines.rules.0")}</li>
+                                                <li>• {t("registerEvent.dateTime.guidelines.rules.1")}</li>
+                                                <li>• {t("registerEvent.dateTime.guidelines.rules.2")}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -615,86 +719,86 @@ export default function RegisterFestivalPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <MapPin className="h-5 w-5" />
-                                    Location Information
+                                    {t("registerEvent.location.title")}
                                 </CardTitle>
-                                <CardDescription>Where will your event be held?</CardDescription>
+                                <CardDescription>{t("registerEvent.location.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
-                                    <Label htmlFor="venueName">Venue Name *</Label>
+                                    <Label htmlFor="venueName">{t("registerEvent.location.venueName")} *</Label>
                                     <Input
                                         id="venueName"
                                         name="venueName"
                                         value={formData.venueName}
                                         onChange={handleInputChange}
                                         required
-                                        placeholder="Central Park, Convention Center, etc."
+                                        placeholder={t("registerEvent.location.placeholders.venueName")}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="venueAddress">Venue Address *</Label>
+                                    <Label htmlFor="venueAddress">{t("registerEvent.location.venueAddress")} *</Label>
                                     <Input
                                         id="venueAddress"
                                         name="venueAddress"
                                         value={formData.venueAddress}
                                         onChange={handleInputChange}
                                         required
-                                        placeholder="123 Main Street"
+                                        placeholder={t("registerEvent.location.placeholders.venueAddress")}
                                     />
                                 </div>
 
                                 <div className="grid md:grid-cols-3 gap-4">
                                     <div>
-                                        <Label htmlFor="city">City *</Label>
+                                        <Label htmlFor="city">{t("registerEvent.location.city")} *</Label>
                                         <Input
                                             id="city"
                                             name="city"
                                             value={formData.city}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="New York"
+                                            placeholder={t("registerEvent.location.placeholders.city")}
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="state">State/Province *</Label>
+                                        <Label htmlFor="state">{t("registerEvent.location.state")} *</Label>
                                         <Input
                                             id="state"
                                             name="state"
                                             value={formData.state}
                                             onChange={handleInputChange}
                                             required
-                                            placeholder="NY"
+                                            placeholder={t("registerEvent.location.placeholders.state")}
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="zipCode">ZIP/Postal Code</Label>
+                                        <Label htmlFor="zipCode">{t("registerEvent.location.zipCode")}</Label>
                                         <Input
                                             id="zipCode"
                                             name="zipCode"
                                             value={formData.zipCode}
                                             onChange={handleInputChange}
-                                            placeholder="10001"
+                                            placeholder={t("registerEvent.location.placeholders.zipCode")}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="country">Country</Label>
+                                    <Label htmlFor="country">{t("registerEvent.location.country")}</Label>
                                     <Input
                                         id="country"
                                         name="country"
                                         value={formData.country}
                                         onChange={handleInputChange}
-                                        placeholder="United States"
+                                        placeholder={t("registerEvent.location.placeholders.country")}
                                     />
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="venueType">Venue Type *</Label>
-                                    <Select value={formData.venueType} onValueChange={(value) => handleSelectChange("venueType", value)}>
+                                    <Label htmlFor="venueType">{t("registerEvent.location.venueType")} *</Label>
+                                    <Select value={formData.venueType || undefined} onValueChange={(value) => handleSelectChange("venueType", value)}>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select venue type" />
+                                            <SelectValue placeholder={t("registerEvent.location.placeholders.venueType")} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {venueTypes.map((type) => (
@@ -707,7 +811,7 @@ export default function RegisterFestivalPage() {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Label>Venue Amenities</Label>
+                                    <Label>{t("registerEvent.location.venueAmenities")}</Label>
                                     <div className="grid md:grid-cols-2 gap-3">
                                         <div className="flex items-center space-x-2">
                                             <Checkbox
@@ -716,7 +820,7 @@ export default function RegisterFestivalPage() {
                                                 onCheckedChange={(checked) => handleCheckboxChange("accessibility", checked as boolean)}
                                             />
                                             <Label htmlFor="accessibility" className="text-sm">
-                                                Wheelchair Accessible
+                                                {t("registerEvent.location.wheelchairAccessible")}
                                             </Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
@@ -726,7 +830,7 @@ export default function RegisterFestivalPage() {
                                                 onCheckedChange={(checked) => handleCheckboxChange("parking", checked as boolean)}
                                             />
                                             <Label htmlFor="parking" className="text-sm">
-                                                Parking Available
+                                                {t("registerEvent.location.parkingAvailable")}
                                             </Label>
                                         </div>
                                     </div>
@@ -741,19 +845,19 @@ export default function RegisterFestivalPage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
                                     <DollarSign className="h-5 w-5" />
-                                    Event Details & Pricing
+                                    {t("registerEvent.details.title")}
                                 </CardTitle>
-                                <CardDescription>Provide details about attendance and pricing</CardDescription>
+                                <CardDescription>{t("registerEvent.details.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
-                                    <Label htmlFor="expectedAttendance">Expected Attendance *</Label>
+                                    <Label htmlFor="expectedAttendance">{t("registerEvent.details.expectedAttendance")} *</Label>
                                     <Select
-                                        value={formData.expectedAttendance}
+                                        value={formData.expectedAttendance || undefined}
                                         onValueChange={(value) => handleSelectChange("expectedAttendance", value)}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select expected attendance" />
+                                            <SelectValue placeholder={t("registerEvent.details.placeholders.expectedAttendance")} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {expectedAttendance.map((range) => (
@@ -772,12 +876,12 @@ export default function RegisterFestivalPage() {
                                             checked={formData.freeEvent}
                                             onCheckedChange={(checked) => handleCheckboxChange("freeEvent", checked as boolean)}
                                         />
-                                        <Label htmlFor="freeEvent">This is a free event</Label>
+                                        <Label htmlFor="freeEvent">{t("registerEvent.details.freeEvent")}</Label>
                                     </div>
 
                                     {!formData.freeEvent && (
                                         <div>
-                                            <Label htmlFor="ticketPrice">Ticket Price (USD) *</Label>
+                                            <Label htmlFor="ticketPrice">{t("registerEvent.details.ticketPrice")} *</Label>
                                             <Input
                                                 id="ticketPrice"
                                                 name="ticketPrice"
@@ -787,32 +891,32 @@ export default function RegisterFestivalPage() {
                                                 value={formData.ticketPrice}
                                                 onChange={handleInputChange}
                                                 required={!formData.freeEvent}
-                                                placeholder="25.00"
+                                                placeholder={t("registerEvent.details.placeholders.ticketPrice")}
                                             />
                                         </div>
                                     )}
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="ageRestriction">Age Restriction</Label>
+                                    <Label htmlFor="ageRestriction">{t("registerEvent.details.ageRestriction")}</Label>
                                     <Select
-                                        value={formData.ageRestriction}
+                                        value={formData.ageRestriction || undefined}
                                         onValueChange={(value) => handleSelectChange("ageRestriction", value)}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Select age restriction" />
+                                            <SelectValue placeholder={t("registerEvent.details.placeholders.ageRestriction")} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all-ages">All Ages</SelectItem>
-                                            <SelectItem value="18+">18+ Only</SelectItem>
-                                            <SelectItem value="21+">21+ Only</SelectItem>
-                                            <SelectItem value="family">Family Friendly</SelectItem>
+                                            <SelectItem value="all-ages">{t("registerEvent.ageRestrictions.all-ages")}</SelectItem>
+                                            <SelectItem value="18+">{t("registerEvent.ageRestrictions.18+")}</SelectItem>
+                                            <SelectItem value="21+">{t("registerEvent.ageRestrictions.21+")}</SelectItem>
+                                            <SelectItem value="family">{t("registerEvent.ageRestrictions.family")}</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div className="space-y-3">
-                                    <Label>Event Features</Label>
+                                    <Label>{t("registerEvent.details.eventFeatures")}</Label>
                                     <div className="grid md:grid-cols-2 gap-3">
                                         <div className="flex items-center space-x-2">
                                             <Checkbox
@@ -821,7 +925,7 @@ export default function RegisterFestivalPage() {
                                                 onCheckedChange={(checked) => handleCheckboxChange("foodVendors", checked as boolean)}
                                             />
                                             <Label htmlFor="foodVendors" className="text-sm">
-                                                Food Vendors Available
+                                                {t("registerEvent.details.foodVendors")}
                                             </Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
@@ -831,20 +935,20 @@ export default function RegisterFestivalPage() {
                                                 onCheckedChange={(checked) => handleCheckboxChange("alcoholServed", checked as boolean)}
                                             />
                                             <Label htmlFor="alcoholServed" className="text-sm">
-                                                Alcohol Will Be Served
+                                                {t("registerEvent.details.alcoholServed")}
                                             </Label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="specialRequirements">Special Requirements</Label>
+                                    <Label htmlFor="specialRequirements">{t("registerEvent.details.specialRequirements")}</Label>
                                     <Textarea
                                         id="specialRequirements"
                                         name="specialRequirements"
                                         value={formData.specialRequirements}
                                         onChange={handleInputChange}
-                                        placeholder="Any special equipment, setup requirements, or considerations..."
+                                        placeholder={t("registerEvent.details.placeholders.specialRequirements")}
                                         rows={3}
                                     />
                                 </div>
@@ -856,18 +960,18 @@ export default function RegisterFestivalPage() {
                     {currentStep === 6 && (
                         <Card>
                             <CardHeader>
-                                <CardTitle>Legal Information & Agreement</CardTitle>
-                                <CardDescription>Final details and terms acceptance</CardDescription>
+                                <CardTitle>{t("registerEvent.agreement.title")}</CardTitle>
+                                <CardDescription>{t("registerEvent.agreement.subtitle")}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 <div>
-                                    <Label htmlFor="insuranceInfo">Insurance Information</Label>
+                                    <Label htmlFor="insuranceInfo">{t("registerEvent.agreement.insuranceInfo")}</Label>
                                     <Textarea
                                         id="insuranceInfo"
                                         name="insuranceInfo"
                                         value={formData.insuranceInfo}
                                         onChange={handleInputChange}
-                                        placeholder="Details about your event insurance coverage..."
+                                        placeholder={t("registerEvent.agreement.placeholders.insuranceInfo")}
                                         rows={3}
                                     />
                                 </div>
@@ -879,18 +983,18 @@ export default function RegisterFestivalPage() {
                                         onCheckedChange={(checked) => handleCheckboxChange("permitsObtained", checked as boolean)}
                                     />
                                     <Label htmlFor="permitsObtained" className="text-sm">
-                                        I have obtained or will obtain all necessary permits and licenses
+                                        {t("registerEvent.agreement.permitsObtained")}
                                     </Label>
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="emergencyPlan">Emergency Plan</Label>
+                                    <Label htmlFor="emergencyPlan">{t("registerEvent.agreement.emergencyPlan")}</Label>
                                     <Textarea
                                         id="emergencyPlan"
                                         name="emergencyPlan"
                                         value={formData.emergencyPlan}
                                         onChange={handleInputChange}
-                                        placeholder="Brief description of your emergency and safety plan..."
+                                        placeholder={t("registerEvent.agreement.placeholders.emergencyPlan")}
                                         rows={3}
                                     />
                                 </div>
@@ -905,14 +1009,7 @@ export default function RegisterFestivalPage() {
                                             onCheckedChange={(checked) => handleCheckboxChange("termsAccepted", checked as boolean)}
                                         />
                                         <Label htmlFor="termsAccepted" className="text-sm leading-relaxed">
-                                            I agree to the{" "}
-                                            <a href="/terms" className="text-purple-600 hover:underline">
-                                                Terms of Service
-                                            </a>{" "}
-                                            and{" "}
-                                            <a href="/organizer-agreement" className="text-purple-600 hover:underline">
-                                                Event Organizer Agreement
-                                            </a>
+                                            {t("registerEvent.agreement.termsAccepted")}
                                         </Label>
                                     </div>
 
@@ -923,21 +1020,18 @@ export default function RegisterFestivalPage() {
                                             onCheckedChange={(checked) => handleCheckboxChange("dataProcessingAccepted", checked as boolean)}
                                         />
                                         <Label htmlFor="dataProcessingAccepted" className="text-sm leading-relaxed">
-                                            I consent to the processing of my personal data as described in the{" "}
-                                            <a href="/privacy" className="text-purple-600 hover:underline">
-                                                Privacy Policy
-                                            </a>
+                                            {t("registerEvent.agreement.dataProcessingAccepted")}
                                         </Label>
                                     </div>
                                 </div>
 
                                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                    <h4 className="font-medium text-yellow-800 mb-2">Review Process</h4>
+                                    <h4 className="font-medium text-yellow-800 mb-2">{t("registerEvent.agreement.reviewProcess.title")}</h4>
                                     <ul className="text-sm text-yellow-700 space-y-1">
-                                        <li>• Applications are reviewed within 3-5 business days</li>
-                                        <li>• We may request additional information or documentation</li>
-                                        <li>• Approved events will be contacted to complete setup</li>
-                                        <li>• A 5% platform fee applies to all ticket sales</li>
+                                        <li>• {t("registerEvent.agreement.reviewProcess.rules.0")}</li>
+                                        <li>• {t("registerEvent.agreement.reviewProcess.rules.1")}</li>
+                                        <li>• {t("registerEvent.agreement.reviewProcess.rules.2")}</li>
+                                        <li>• {t("registerEvent.agreement.reviewProcess.rules.3")}</li>
                                     </ul>
                                 </div>
                             </CardContent>
@@ -962,7 +1056,7 @@ export default function RegisterFestivalPage() {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                             </svg>
-                            Previous
+                            {t("registerEvent.buttons.previous")}
                         </Button>
 
                         {/* Step indicator dots */}
@@ -998,7 +1092,7 @@ export default function RegisterFestivalPage() {
                                         }
                                     `}
                                 >
-                                    Continue
+                                    {t("registerEvent.buttons.continue")}
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
@@ -1006,26 +1100,26 @@ export default function RegisterFestivalPage() {
                             ) : (
                                 <Button
                                     type="submit"
-                                    disabled={!isStepValid(currentStep) || isSubmitting}
+                                    disabled={!isStepValid(currentStep) || submitEventMutation.isPending}
                                     className={`
                                         flex items-center gap-2 px-8 py-3 text-white font-semibold
                                         transition-all duration-200 transform
                                         ${
-                                            !isStepValid(currentStep) || isSubmitting
+                                            !isStepValid(currentStep) || submitEventMutation.isPending
                                                 ? "bg-gray-400 cursor-not-allowed opacity-50"
                                                 : "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 hover:shadow-lg hover:-translate-y-0.5 focus:ring-4 focus:ring-green-300"
                                         }
                                     `}
                                 >
-                                    {isSubmitting ? (
+                                    {submitEventMutation.isPending ? (
                                         <>
                                             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                            Submitting Application...
+                                            {t("registerEvent.buttons.submittingApplication")}
                                         </>
                                     ) : (
                                         <>
                                             <Upload className="h-5 w-5" />
-                                            Submit Application
+                                            {t("registerEvent.buttons.submitApplication")}
                                         </>
                                     )}
                                 </Button>

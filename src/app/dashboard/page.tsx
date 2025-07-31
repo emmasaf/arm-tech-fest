@@ -14,7 +14,7 @@ import {
   Clock,
   Loader2
 } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+import { useDashboardStats } from '@/hooks/api/useDashboardStats'
 import { useSession } from 'next-auth/react'
 
 // Icon mapping for dynamic rendering
@@ -32,19 +32,8 @@ const iconMap = {
 export default function DashboardPage() {
   const { data: session, status } = useSession()
 
-  // Fetch dashboard stats based on user role
-  const { data: dashboardData, isLoading, error } = useQuery({
-    queryKey: ['dashboard-stats', session?.user?.role],
-    queryFn: async () => {
-      const response = await fetch(`/api/dashboard/stats?role=${session?.user?.role}`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch dashboard data')
-      }
-      return response.json()
-    },
-    enabled: !!session?.user,
-    refetchInterval: 30000, // Refetch every 30 seconds for live data
-  })
+  // Fetch dashboard stats
+  const { data: dashboardData, isLoading, error } = useDashboardStats()
 
   if (status === 'loading' || isLoading) {
     return (

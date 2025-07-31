@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true'
     const upcoming = searchParams.get('upcoming') === 'true'
     const organizerId = searchParams.get('organizerId')
+    const statusFilter = searchParams.get('status') // 'all', 'ongoing', 'upcoming', 'finished'
 
     const skip = (page - 1) * limit
 
@@ -43,6 +44,25 @@ export async function GET(request: NextRequest) {
 
     if (organizerId) {
       where.organizerId = organizerId
+    }
+
+    // Add status filter
+    const now = new Date()
+    if (statusFilter && statusFilter !== 'all') {
+      switch (statusFilter) {
+        case 'upcoming':
+          where.startDate = { gt: now }
+          break
+        case 'ongoing':
+          where.AND = [
+            { startDate: { lte: now } },
+            { endDate: { gte: now } }
+          ]
+          break
+        case 'finished':
+          where.endDate = { lt: now }
+          break
+      }
     }
 
     // Get events with related data
